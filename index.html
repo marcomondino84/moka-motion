@@ -1,89 +1,78 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>MOKA MOTION</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --bg: #090a0f;
-      --surface: #11131a;
-      --card-bg: #151822;
-      --border: #222634;
+      --surface: rgba(18, 20, 29, 0.75);
+      --card-bg: rgba(22, 26, 38, 0.85);
+      --card-border: rgba(255, 255, 255, 0.1);
       --text: #ffffff;
-      --text-muted: #8b92a5;
+      --text-muted: #9ba3b5;
       --accent: #00ff88;
       --danger: #ff3366;
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Montserrat', sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; -webkit-tap-highlight-color: transparent; }
+    
+    /* FONDO AMBIENTAL LIVE / STREETWEAR CON DEGRADADO CÁLIDO */
     body {
-      background: var(--bg);
+      background-color: #08090d;
+      background-image: 
+        radial-gradient(circle at 90% 10%, rgba(255, 115, 0, 0.28) 0%, transparent 45%),
+        radial-gradient(circle at 10% 85%, rgba(40, 70, 140, 0.2) 0%, transparent 50%),
+        linear-gradient(180deg, #0d0f17 0%, #06070a 100%);
+      background-attachment: fixed;
       color: var(--text);
       display: flex;
       justify-content: center;
       min-height: 100vh;
     }
 
-    /* CONTENEDOR APP MOBILE FIRST (centrado en pantallas grandes) */
     .app-viewport {
       width: 100%;
       max-width: 480px;
       min-height: 100vh;
-      background: var(--surface);
       position: relative;
-      padding-bottom: 90px;
-      box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+      padding-bottom: 95px;
       display: flex;
       flex-direction: column;
+      backdrop-filter: blur(8px);
+      border-left: 1px solid rgba(255,255,255,0.05);
+      border-right: 1px solid rgba(255,255,255,0.05);
     }
 
-    /* HEADER CON LOGO REAL */
+    /* HEADER */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 14px 18px;
-      background: rgba(17, 19, 26, 0.95);
-      backdrop-filter: blur(10px);
+      background: rgba(10, 12, 18, 0.8);
+      backdrop-filter: blur(16px);
       position: sticky;
       top: 0;
       z-index: 40;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--card-border);
     }
-
-    .header-brand {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .header-brand img {
-      height: 28px;
-      width: auto;
-      object-fit: contain;
-    }
-
+    .header-brand img { height: 26px; width: auto; object-fit: contain; }
     .btn-admin-top {
-      background: #1c202e;
-      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
       color: var(--text-muted);
       padding: 6px 14px;
       border-radius: 20px;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 700;
       text-decoration: none;
+      transition: all 0.2s;
     }
+    .btn-admin-top:hover { background: #fff; color: #000; }
 
     /* STORIES */
     .section-tag {
@@ -96,200 +85,113 @@
       display: flex;
       justify-content: space-between;
     }
-
     .stories-tray {
       display: flex;
-      gap: 12px;
+      gap: 14px;
       overflow-x: auto;
       padding: 0 18px 12px;
       scrollbar-width: none;
     }
-
-    .stories-tray::-webkit-scrollbar {
-      display: none;
-    }
-
-    .story-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
+    .stories-tray::-webkit-scrollbar { display: none; }
+    .story-item { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; flex-shrink: 0; }
     .story-ring {
-      width: 62px;
-      height: 62px;
+      width: 64px;
+      height: 64px;
       border-radius: 50%;
-      padding: 2px;
-      background: linear-gradient(45deg, #00ff88, #00d2ff, #ff3366);
+      padding: 2.5px;
+      background: linear-gradient(135deg, #ff7b00, #ff0077, var(--accent));
       display: flex;
       align-items: center;
       justify-content: center;
     }
-
-    .story-ring img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--surface);
-    }
-
-    .story-title {
-      font-size: 0.65rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      max-width: 60px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
+    .story-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #090a0f; }
+    .story-title { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); max-width: 65px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
     /* FILTROS */
-    .chips-bar {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding: 4px 18px 14px;
-      scrollbar-width: none;
-    }
-
-    .chips-bar::-webkit-scrollbar {
-      display: none;
-    }
-
+    .chips-bar { display: flex; gap: 8px; overflow-x: auto; padding: 4px 18px 14px; scrollbar-width: none; }
+    .chips-bar::-webkit-scrollbar { display: none; }
     .chip {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
       color: var(--text-muted);
-      padding: 7px 15px;
+      padding: 7px 14px;
       border-radius: 20px;
       font-size: 0.75rem;
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
+      backdrop-filter: blur(10px);
     }
+    .chip.active { background: #fff; color: #000; border-color: #fff; }
 
-    .chip.active {
-      background: #fff;
-      color: #000;
-      border-color: #fff;
-    }
-
-    /* FEED DE PRODUCTOS */
-    .feed-container {
-      padding: 0 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
+    /* FEED DE PRENDAS */
+    .feed-container { padding: 0 18px; display: flex; flex-direction: column; gap: 20px; }
     .product-post {
       background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 18px;
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
       overflow: hidden;
       cursor: pointer;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: transform 0.2s;
     }
-
-    .post-image-wrapper {
-      position: relative;
-      width: 100%;
-      padding-top: 110%;
-      background: #000;
-    }
-
-    .post-image-wrapper img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
+    .post-image-wrapper { position: relative; width: 100%; padding-top: 105%; background: #000; }
+    .post-image-wrapper img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .post-badge {
       position: absolute;
       bottom: 12px;
       right: 12px;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(6px);
+      padding: 4px 9px;
+      border-radius: 8px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .post-tag-sale {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--danger);
+      color: #fff;
       padding: 4px 8px;
       border-radius: 6px;
       font-size: 0.65rem;
-      font-weight: 700;
-    }
-
-    .post-details {
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .post-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-    }
-
-    /* PALETA DE COLORES */
-    .color-dots-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .color-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .color-names-summary {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      margin-left: 4px;
-    }
-
-    .post-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 4px;
-    }
-
-    .post-price {
-      font-size: 1.15rem;
       font-weight: 900;
-      color: #fff;
+      text-transform: uppercase;
     }
+    .post-details { padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+    .post-title { font-size: 0.95rem; font-weight: 800; }
+    
+    .color-dots-row { display: flex; align-items: center; gap: 6px; }
+    .color-dot { width: 13px; height: 13px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); }
+    .color-names-summary { font-size: 0.7rem; color: var(--text-muted); margin-left: 4px; }
+    
+    .post-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 2px; }
+    .post-price { font-size: 1.15rem; font-weight: 900; color: #fff; }
+    .post-stock { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; }
 
-    .post-stock {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-    }
-
-    /* DOCK INFERIOR FIJO */
+    /* DOCK INFERIOR */
     .dock-nav {
       position: fixed;
-      bottom: 15px;
+      bottom: 16px;
       left: 50%;
       transform: translateX(-50%);
       width: calc(100% - 36px);
       max-width: 444px;
-      background: rgba(21, 24, 34, 0.92);
-      backdrop-filter: blur(14px);
-      border: 1px solid var(--border);
-      border-radius: 25px;
+      background: rgba(14, 17, 24, 0.88);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
       display: flex;
       justify-content: space-around;
       align-items: center;
       padding: 10px 14px;
       z-index: 50;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
     }
-
     .dock-btn {
       background: none;
       border: none;
@@ -303,11 +205,7 @@
       cursor: pointer;
       position: relative;
     }
-
-    .dock-btn.active {
-      color: #fff;
-    }
-
+    .dock-btn.active { color: #fff; }
     .cart-bubble-count {
       position: absolute;
       top: -3px;
@@ -324,7 +222,7 @@
       justify-content: center;
     }
 
-    /* MODAL HISTORIAS (CON TIMER CONFIGURABLE) */
+    /* STORY VIEWER FULLSCREEN (CON TIMER AUTOMÁTICO) */
     .story-screen {
       position: fixed;
       inset: 0;
@@ -335,34 +233,24 @@
       justify-content: center;
       align-items: center;
     }
-
-    .story-screen.open {
-      display: flex;
-    }
-
+    .story-screen.open { display: flex; }
     .story-bar-timer {
       position: absolute;
       top: 15px;
       left: 15px;
       right: 15px;
       height: 3px;
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(255,255,255,0.25);
       border-radius: 3px;
       overflow: hidden;
       z-index: 102;
     }
-
-    .story-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: #fff;
-    }
-
+    .story-bar-fill { height: 100%; width: 0%; background: #fff; }
     .story-close-btn {
       position: absolute;
       top: 25px;
       right: 20px;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0,0,0,0.5);
       border: none;
       color: #fff;
       width: 36px;
@@ -372,83 +260,57 @@
       cursor: pointer;
       z-index: 102;
     }
-
-    .story-display-img {
-      width: 100%;
-      height: 80vh;
-      object-fit: contain;
-    }
-
+    .story-display-img { width: 100%; height: 82vh; object-fit: contain; }
     .story-bottom-label {
       position: absolute;
-      bottom: 40px;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 8px 20px;
+      bottom: 35px;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(10px);
+      padding: 8px 22px;
       border-radius: 20px;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 0.85rem;
+      border: 1px solid rgba(255,255,255,0.15);
     }
 
-    /* POPUP DETALLE DE PRODUCTO */
+    /* MODAL POPUP AL ABRIR / DETALLE PRENDA */
     .popup-sheet {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(6px);
+      background: rgba(0,0,0,0.78);
+      backdrop-filter: blur(8px);
       z-index: 90;
       display: none;
       align-items: flex-end;
     }
-
-    .popup-sheet.open {
-      display: flex;
-    }
-
+    .popup-sheet.open { display: flex; }
     .sheet-card {
-      background: var(--surface);
+      background: #10131c;
       width: 100%;
       max-width: 480px;
       margin: 0 auto;
       border-radius: 24px 24px 0 0;
       padding: 22px;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--card-border);
       max-height: 85vh;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 14px;
     }
-
-    .selector-title {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-
-    .options-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
+    .selector-title { font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
+    .options-row { display: flex; gap: 8px; flex-wrap: wrap; }
     .opt-chip {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--card-border);
       padding: 8px 14px;
       border-radius: 10px;
       font-size: 0.8rem;
       font-weight: 700;
       cursor: pointer;
     }
-
-    .opt-chip.active {
-      border-color: #fff;
-      background: #fff;
-      color: #000;
-    }
-
+    .opt-chip.active { border-color: #fff; background: #fff; color: #000; }
+    
     .btn-main-action {
       background: #fff;
       color: #000;
@@ -460,13 +322,12 @@
       text-transform: uppercase;
       cursor: pointer;
       width: 100%;
-      margin-top: 8px;
+      margin-top: 6px;
     }
-
     .input-box {
       width: 100%;
-      background: #090a0f;
-      border: 1px solid var(--border);
+      background: #080a0f;
+      border: 1px solid var(--card-border);
       color: #fff;
       padding: 12px 14px;
       border-radius: 12px;
@@ -474,76 +335,72 @@
     }
   </style>
 </head>
-
 <body>
 
   <div class="app-viewport">
-
-    <!-- HEADER -->
     <header>
       <div class="header-brand">
-        <img src="logo.png" alt="Moka Motion">
+        <img src="logo.png" alt="MOKA MOTION">
       </div>
       <a href="admin.html" class="btn-admin-top">ADMIN</a>
     </header>
 
-    <!-- STORIES -->
     <div class="section-tag">
       <span>DROPS & STORIES</span>
-      <span style="color:var(--text-muted); font-size:0.55rem;">TAP PARA VER</span>
+      <span style="font-size:0.55rem;">TAP PARA VER</span>
     </div>
     <div class="stories-tray" id="storiesTray"></div>
 
-    <!-- FILTROS -->
-    <div class="chips-bar">
+    <div class="chips-bar" id="chipsContainer">
       <button class="chip active" onclick="filtrarCategoria('todos', this)">Todos</button>
-      <button class="chip" onclick="filtrarCategoria('calzado', this)">👟 Calzado</button>
-      <button class="chip" onclick="filtrarCategoria('ropa', this)">👕 Ropa</button>
-      <button class="chip" onclick="filtrarCategoria('anteojos', this)">🕶️ Anteojos</button>
     </div>
 
-    <!-- FEED / PRODUCTOS -->
     <div class="feed-container" id="feedList"></div>
 
-    <!-- DOCK BAR -->
     <nav class="dock-nav">
       <button class="dock-btn active" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+        <i class="fa-solid fa-store" style="font-size:1.1rem;"></i>
         <span>INICIO</span>
       </button>
       <button class="dock-btn" onclick="abrirCarritoModal()">
+        <i class="fa-solid fa-bag-shopping" style="font-size:1.1rem;"></i>
         <span>CARRITO</span>
         <div class="cart-bubble-count" id="cartBadge">0</div>
       </button>
     </nav>
-
   </div>
 
-  <!-- POPUP HISTORIAS (CON TIMER) -->
+  <!-- VISOR STORIES CON TEMPORIZADOR -->
   <div class="story-screen" id="storyScreen">
-    <div class="story-bar-timer">
-      <div class="story-bar-fill" id="storyTimerFill"></div>
-    </div>
+    <div class="story-bar-timer"><div class="story-bar-fill" id="storyTimerFill"></div></div>
     <button class="story-close-btn" onclick="cerrarStory()">✕</button>
     <img id="storyImage" class="story-display-img" src="" alt="Story">
     <div class="story-bottom-label" id="storyCaption"></div>
   </div>
 
-  <!-- POPUP DETALLE DE PRODUCTO (PARA ELEGIR TALLE Y COLOR) -->
+  <!-- POPUP DETALLE DE PRODUCTO (O POPUP DE ENTRADA) -->
   <div class="popup-sheet" id="productModal" onclick="if(event.target===this) cerrarDetalleProducto()">
     <div class="sheet-card">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 id="modalProdTitle" style="font-weight:900;">Producto</h3>
-        <button onclick="cerrarDetalleProducto()"
-          style="background:none; border:none; color:var(--text-muted); font-size:1.2rem; cursor:pointer;">✕</button>
+        <div>
+          <span id="modalPopupTag" style="display:none; background:var(--accent); color:#000; font-size:0.6rem; font-weight:900; padding:2px 6px; border-radius:4px; margin-bottom:4px;">DESTACADO</span>
+          <h3 id="modalProdTitle" style="font-weight:900; font-size:1.1rem;">Prenda</h3>
+        </div>
+        <button onclick="cerrarDetalleProducto()" style="background:none; border:none; color:var(--text-muted); font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
-      <div id="modalProdPrice" style="font-size:1.2rem; font-weight:900; color:var(--accent);">$0</div>
+      
+      <div id="modalProdImgWrap" style="width:100%; height:240px; border-radius:14px; overflow:hidden; background:#000; display:none;">
+        <img id="modalProdImg" src="" style="width:100%; height:100%; object-fit:cover;">
+      </div>
 
-      <div>
+      <div id="modalProdPrice" style="font-size:1.2rem; font-weight:900; color:var(--accent);">$0</div>
+      
+      <div id="boxTalles">
         <div class="selector-title">Seleccionar Talle</div>
         <div class="options-row" id="modalTallesRow"></div>
       </div>
 
-      <div>
+      <div id="boxColores">
         <div class="selector-title">Seleccionar Color</div>
         <div class="options-row" id="modalColoresRow"></div>
       </div>
@@ -552,20 +409,18 @@
     </div>
   </div>
 
-  <!-- POPUP CARRITO / FINALIZAR PEDIDO -->
+  <!-- MODAL CARRITO -->
   <div class="popup-sheet" id="cartModal" onclick="if(event.target===this) cerrarCarritoModal()">
     <div class="sheet-card">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <h3 style="font-weight:900;">TU PEDIDO</h3>
-        <button onclick="cerrarCarritoModal()"
-          style="background:none; border:none; color:var(--text-muted); font-size:1.2rem; cursor:pointer;">✕</button>
+        <button onclick="cerrarCarritoModal()" style="background:none; border:none; color:var(--text-muted); font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
 
-      <div id="cartItemsList" style="display:flex; flex-direction:column; gap:8px; max-height:180px; overflow-y:auto;">
-      </div>
+      <div id="cartItemsList" style="display:flex; flex-direction:column; gap:8px; max-height:180px; overflow-y:auto;"></div>
 
       <input type="text" id="orderNombre" class="input-box" placeholder="Nombre completo">
-      <input type="text" id="orderDireccion" class="input-box" placeholder="Dirección de envío o entrega">
+      <input type="text" id="orderDireccion" class="input-box" placeholder="Dirección de entrega">
 
       <div style="display:flex; justify-content:space-between; font-size:1.1rem; font-weight:900; margin-top:6px;">
         <span>Total:</span>
@@ -577,47 +432,37 @@
   </div>
 
   <script>
-    const MI_TELEFONO_WA = '5493462556677'; // TU NÚMERO
-    const TIEMPO_STORY_SEGUNDOS = 4; // TIEMPO VISIBLE DE CADA STORY
+    const SUPABASE_URL = 'https://jsymymfchgqadrycchkb.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_5GGAOsVNCKWME8hbvTlcQQ_FxBftQYO';
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // DATOS DE HISTORIAS
-    const storiesData = [
-      { id: 1, titulo: 'Promociones', img: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=800' },
-      { id: 2, titulo: 'Pruebaa', img: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800' }
-    ];
+    const MI_TELEFONO_WA = '5493462325547';
+    const TIEMPO_STORY_SEGUNDOS = 4;
 
-    // DATOS DE PRODUCTOS
-    const productosData = [
-      {
-        id: 1,
-        nombre: 'Prueba pantalon',
-        categoria: 'ropa',
-        precio: 10000,
-        stock: 5,
-        imagenes: ['https://images.unsplash.com/photo-1517445312882-bc9910d016b7?w=700'],
-        talles: ['S', 'M', 'L', 'XL'],
-        colores: [
-          { nombre: 'Negro', hex: '#111111' },
-          { nombre: 'Blanco', hex: '#ffffff' },
-          { nombre: 'Militar', hex: '#4b5320' },
-          { nombre: 'Azul', hex: '#1b3a6b' },
-          { nombre: 'Verde Fuerte', hex: '#147a32' }
-        ]
-      }
-    ];
-
+    let storiesData = [];
+    let productosData = [];
     let carrito = [];
     let productoEnSeleccion = null;
     let talleSeleccionado = '';
     let colorSeleccionado = '';
     let storyTimerInterval = null;
 
-    // RENDER HISTORIAS
-    function renderStories() {
+    async function initApp() {
+      await Promise.all([cargarCategorias(), cargarStories(), cargarCatalogo()]);
+      verificarPopupInicio();
+    }
+
+    async function cargarStories() {
+      const { data } = await db.from('historias').select('*').eq('activo', true).order('id', { ascending: false });
+      storiesData = data || [];
       const tray = document.getElementById('storiesTray');
+      if (storiesData.length === 0) {
+        tray.innerHTML = '<span style="font-size:0.7rem; color:var(--text-muted); padding:10px 0;">No hay stories activas</span>';
+        return;
+      }
       tray.innerHTML = storiesData.map((s, index) => `
         <div class="story-item" onclick="abrirStory(${index})">
-          <div class="story-ring"><img src="${s.img}" alt="${s.titulo}"></div>
+          <div class="story-ring"><img src="${s.imagen}" alt="${s.titulo}"></div>
           <span class="story-title">${s.titulo}</span>
         </div>
       `).join('');
@@ -626,11 +471,10 @@
     function abrirStory(index) {
       const s = storiesData[index];
       if (!s) return;
-      document.getElementById('storyImage').src = s.img;
+      document.getElementById('storyImage').src = s.imagen;
       document.getElementById('storyCaption').innerText = s.titulo;
       document.getElementById('storyScreen').classList.add('open');
-
-      // Temporizador visual
+      
       const bar = document.getElementById('storyTimerFill');
       bar.style.transition = 'none';
       bar.style.width = '0%';
@@ -648,26 +492,43 @@
       document.getElementById('storyScreen').classList.remove('open');
     }
 
-    // RENDER FEED
+    async function cargarCategorias() {
+      const { data } = await db.from('categorias').select('*').order('id', { ascending: true });
+      if (!data || data.length === 0) return;
+      const chipsBox = document.getElementById('chipsContainer');
+      chipsBox.innerHTML = '<button class="chip active" onclick="filtrarCategoria(\'todos\', this)">Todos</button>' +
+        data.map(c => `<button class="chip" onclick="filtrarCategoria('${c.nombre}', this)">${c.icono || '🏷️'} ${c.nombre}</button>`).join('');
+    }
+
+    async function cargarCatalogo() {
+      const { data } = await db.from('productos').select('*').order('id', { ascending: false });
+      productosData = data || [];
+      renderFeed(productosData);
+    }
+
     function renderFeed(items) {
       const feed = document.getElementById('feedList');
+      if (items.length === 0) {
+        feed.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:30px 0; font-size:0.8rem;">No hay prendas en esta sección</p>';
+        return;
+      }
       feed.innerHTML = items.map(p => {
-        const dots = p.colores.map(c => `<span class="color-dot" style="background:${c.hex}"></span>`).join('');
-        const colorNames = p.colores.map(c => c.nombre).join(', ');
+        const foto = (p.imagenes && p.imagenes[0]) || p.imagen || '';
+        const cantidadFotos = (p.imagenes && p.imagenes.length) || (p.imagen ? 1 : 0);
+        const coloresList = (p.colores && p.colores.length > 0) ? p.colores.join(', ') : '';
+
         return `
           <div class="product-post" onclick="abrirDetalleProducto(${p.id})">
             <div class="post-image-wrapper">
-              <img src="${p.imagenes[0]}" alt="${p.nombre}">
-              <div class="post-badge">🖼️ ${p.imagenes.length}</div>
+              <img src="${foto}" alt="${p.nombre}">
+              ${p.en_oferta ? '<div class="post-tag-sale">SALE</div>' : ''}
+              ${cantidadFotos > 1 ? `<div class="post-badge"><i class="fa-regular fa-images"></i> ${cantidadFotos}</div>` : ''}
             </div>
             <div class="post-details">
               <div class="post-title">${p.nombre}</div>
-              <div class="color-dots-row">
-                ${dots}
-                <span class="color-names-summary">${colorNames}</span>
-              </div>
+              ${coloresList ? `<div class="color-names-summary"><i class="fa-solid fa-palette"></i> ${coloresList}</div>` : ''}
               <div class="post-footer">
-                <span class="post-price">$${p.precio.toLocaleString('es-AR')}</span>
+                <span class="post-price">$${Number(p.precio).toLocaleString('es-AR')}</span>
                 <span class="post-stock">Stock: ${p.stock}</span>
               </div>
             </div>
@@ -680,28 +541,65 @@
       document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
       btn.classList.add('active');
       if (cat === 'todos') renderFeed(productosData);
-      else renderFeed(productosData.filter(p => p.categoria === cat));
+      else renderFeed(productosData.filter(p => (p.categoria || '').toLowerCase() === cat.toLowerCase()));
     }
 
-    // SELECCIÓN DE TALLE Y COLOR (POPUP)
-    function abrirDetalleProducto(id) {
+    function verificarPopupInicio() {
+      const storyPopup = storiesData.find(s => s.es_popup);
+      if (storyPopup) {
+        const idx = storiesData.indexOf(storyPopup);
+        abrirStory(idx);
+        return;
+      }
+      const prodPopup = productosData.find(p => p.es_popup);
+      if (prodPopup) {
+        abrirDetalleProducto(prodPopup.id, true);
+      }
+    }
+
+    function abrirDetalleProducto(id, esPopupInicio = false) {
       productoEnSeleccion = productosData.find(p => p.id === id);
       if (!productoEnSeleccion) return;
 
+      document.getElementById('modalPopupTag').style.display = esPopupInicio ? 'inline-block' : 'none';
       document.getElementById('modalProdTitle').innerText = productoEnSeleccion.nombre;
-      document.getElementById('modalProdPrice').innerText = `$${productoEnSeleccion.precio.toLocaleString('es-AR')}`;
+      document.getElementById('modalProdPrice').innerText = `$${Number(productoEnSeleccion.precio).toLocaleString('es-AR')}`;
 
-      // Render Talles
-      talleSeleccionado = productoEnSeleccion.talles[0] || '';
-      document.getElementById('modalTallesRow').innerHTML = productoEnSeleccion.talles.map(t => `
-        <div class="opt-chip ${t === talleSeleccionado ? 'active' : ''}" onclick="elegirTalle('${t}', this)">${t}</div>
-      `).join('');
+      const foto = (productoEnSeleccion.imagenes && productoEnSeleccion.imagenes[0]) || productoEnSeleccion.imagen;
+      if (foto) {
+        document.getElementById('modalProdImg').src = foto;
+        document.getElementById('modalProdImgWrap').style.display = 'block';
+      } else {
+        document.getElementById('modalProdImgWrap').style.display = 'none';
+      }
 
-      // Render Colores
-      colorSeleccionado = productoEnSeleccion.colores[0] ? productoEnSeleccion.colores[0].nombre : '';
-      document.getElementById('modalColoresRow').innerHTML = productoEnSeleccion.colores.map(c => `
-        <div class="opt-chip ${c.nombre === colorSeleccionado ? 'active' : ''}" onclick="elegirColor('${c.nombre}', this)">${c.nombre}</div>
-      `).join('');
+      // Talles
+      const talles = productoEnSeleccion.talles || [];
+      const boxT = document.getElementById('boxTalles');
+      if (talles.length > 0) {
+        boxT.style.display = 'block';
+        talleSeleccionado = talles[0];
+        document.getElementById('modalTallesRow').innerHTML = talles.map((t, idx) => `
+          <div class="opt-chip ${idx === 0 ? 'active' : ''}" onclick="elegirTalle('${t}', this)">${t}</div>
+        `).join('');
+      } else {
+        boxT.style.display = 'none';
+        talleSeleccionado = 'Único';
+      }
+
+      // Colores
+      const colores = productoEnSeleccion.colores || [];
+      const boxC = document.getElementById('boxColores');
+      if (colores.length > 0) {
+        boxC.style.display = 'block';
+        colorSeleccionado = colores[0];
+        document.getElementById('modalColoresRow').innerHTML = colores.map((c, idx) => `
+          <div class="opt-chip ${idx === 0 ? 'active' : ''}" onclick="elegirColor('${c}', this)">${c}</div>
+        `).join('');
+      } else {
+        boxC.style.display = 'none';
+        colorSeleccionado = 'Original';
+      }
 
       document.getElementById('productModal').classList.add('open');
     }
@@ -726,7 +624,7 @@
       carrito.push({
         id: productoEnSeleccion.id,
         nombre: productoEnSeleccion.nombre,
-        precio: productoEnSeleccion.precio,
+        precio: Number(productoEnSeleccion.precio),
         talle: talleSeleccionado,
         color: colorSeleccionado
       });
@@ -735,25 +633,28 @@
       abrirCarritoModal();
     }
 
-    // CARRITO Y WHATSAPP
     function abrirCarritoModal() {
       const list = document.getElementById('cartItemsList');
       let total = 0;
-      list.innerHTML = carrito.map((item, idx) => {
-        total += item.precio;
-        return `
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#191d28; padding:8px 12px; border-radius:10px; font-size:0.8rem;">
-            <div>
-              <div style="font-weight:700;">${item.nombre}</div>
-              <div style="color:var(--text-muted); font-size:0.7rem;">${item.talle} / ${item.color}</div>
+      if (carrito.length === 0) {
+        list.innerHTML = '<p style="font-size:0.75rem; color:var(--text-muted); text-align:center; padding:15px 0;">Tu carrito está vacío</p>';
+      } else {
+        list.innerHTML = carrito.map((item, idx) => {
+          total += item.precio;
+          return `
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.04); border:1px solid var(--card-border); padding:8px 12px; border-radius:10px; font-size:0.8rem;">
+              <div>
+                <div style="font-weight:700;">${item.nombre}</div>
+                <div style="color:var(--text-muted); font-size:0.7rem;">${item.talle} / ${item.color}</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-weight:900;">$${item.precio.toLocaleString('es-AR')}</span>
+                <button onclick="borrarItemCarrito(${idx})" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+              </div>
             </div>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span style="font-weight:900;">$${item.precio.toLocaleString('es-AR')}</span>
-              <button onclick="borrarItemCarrito(${idx})" style="background:none; border:none; color:var(--danger); cursor:pointer;">🗑️</button>
-            </div>
-          </div>
-        `;
-      }).join('');
+          `;
+        }).join('');
+      }
 
       document.getElementById('cartTotalPrice').innerText = `$${total.toLocaleString('es-AR')}`;
       document.getElementById('cartModal').classList.add('open');
@@ -774,11 +675,11 @@
       const direccion = document.getElementById('orderDireccion').value.trim();
 
       if (!nombre || !direccion) {
-        alert('Por favor, ingresá tu nombre y la dirección de entrega.');
+        alert('Por favor completá tu nombre y dirección de entrega.');
         return;
       }
       if (carrito.length === 0) {
-        alert('El pedido está vacío.');
+        alert('El carrito está vacío.');
         return;
       }
 
@@ -794,12 +695,10 @@
 
       msg += `\n*TOTAL: $${total.toLocaleString('es-AR')}*`;
 
-      window.open(`https://wa.me/5493462325547?text=${encodeURIComponent(msg)}`, '_blank');
+      window.open(`https://wa.me/${MI_TELEFONO_WA}?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
-    renderStories();
-    renderFeed(productosData);
+    initApp();
   </script>
 </body>
-
 </html>
