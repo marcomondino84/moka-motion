@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" class="bg-[#090a0f] text-white selection:bg-white selection:text-black">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -8,18 +9,23 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body class="font-sans antialiased text-white min-h-screen bg-[#090a0f] pb-24 select-none">
 
   <!-- HEADER -->
-  <header class="sticky top-0 z-30 bg-[#090a0f]/90 backdrop-blur-md border-b border-white/10 px-4 py-3 flex items-center justify-between">
+  <header
+    class="sticky top-0 z-30 bg-[#090a0f]/90 backdrop-blur-md border-b border-white/10 px-4 py-3 flex items-center justify-between">
     <div class="flex items-center gap-2">
-      <span class="text-base font-black tracking-widest uppercase">MOKA<span class="text-xs text-slate-400 font-light ml-1">MOTION</span></span>
+      <span class="text-base font-black tracking-widest uppercase">MOKA<span
+          class="text-xs text-slate-400 font-light ml-1">MOTION</span></span>
     </div>
     <div class="flex items-center gap-3">
-      <a href="admin.html" class="text-slate-400 hover:text-white text-xs px-2.5 py-1 bg-white/5 border border-white/10 rounded-lg">Admin</a>
+      <a href="admin.html"
+        class="text-slate-400 hover:text-white text-xs px-2.5 py-1 bg-white/5 border border-white/10 rounded-lg">Admin</a>
       <button onclick="toggleCart()" class="relative p-2 text-slate-300 hover:text-white">
         <i class="fa-solid fa-bag-shopping text-base"></i>
-        <span id="cartCount" class="hidden absolute top-0 right-0 bg-white text-black font-bold text-[9px] w-4 h-4 rounded-full flex items-center justify-center">0</span>
+        <span id="cartCount"
+          class="hidden absolute top-0 right-0 bg-white text-black font-bold text-[9px] w-4 h-4 rounded-full flex items-center justify-center">0</span>
       </button>
     </div>
   </header>
@@ -37,7 +43,7 @@
   <section class="px-4 mt-3 space-y-3">
     <div class="relative">
       <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-500 text-xs"></i>
-      <input type="text" id="searchInput" oninput="filtrarCatalogo()" placeholder="Buscar prendas..." 
+      <input type="text" id="searchInput" oninput="filtrarCatalogo()" placeholder="Buscar prendas..."
         class="w-full bg-[#141721] border border-white/10 rounded-xl py-2 pl-9 pr-4 text-xs text-white placeholder-slate-500 focus:outline-none">
     </div>
 
@@ -56,22 +62,27 @@
 
   <!-- BOTTOM SHEET DETALLE PRODUCTO -->
   <div id="sheetBackdrop" onclick="closeSheet()" class="hidden fixed inset-0 z-40 bg-black/75 backdrop-blur-xs"></div>
-  <div id="productSheet" class="hidden fixed inset-x-0 bottom-0 z-50 max-h-[90vh] bg-[#141721] border-t border-white/15 rounded-t-[1.5rem] p-5 overflow-y-auto">
+  <div id="productSheet"
+    class="hidden fixed inset-x-0 bottom-0 z-50 max-h-[90vh] bg-[#141721] border-t border-white/15 rounded-t-[1.5rem] p-5 overflow-y-auto">
     <div id="sheetContent"></div>
   </div>
 
   <!-- CARRITO -->
   <div id="cartBackdrop" onclick="toggleCart()" class="hidden fixed inset-0 z-40 bg-black/75 backdrop-blur-xs"></div>
-  <div id="cartSheet" class="hidden fixed inset-x-0 bottom-0 z-50 max-h-[90vh] bg-[#141721] border-t border-white/15 rounded-t-[1.5rem] p-5 overflow-y-auto">
+  <div id="cartSheet"
+    class="hidden fixed inset-x-0 bottom-0 z-50 max-h-[90vh] bg-[#141721] border-t border-white/15 rounded-t-[1.5rem] p-5 overflow-y-auto">
     <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
       <h3 class="font-bold text-sm tracking-wider uppercase">Tu Pedido</h3>
       <button onclick="toggleCart()" class="text-slate-400 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
     </div>
     <div id="cartItemsList" class="space-y-3 mb-5 max-h-48 overflow-y-auto"></div>
     <div class="space-y-3 text-xs border-t border-white/10 pt-4">
-      <input type="text" id="orderNombre" placeholder="Tu Nombre Completo" class="w-full bg-[#090a0f] border border-white/10 rounded-lg p-2 text-white">
-      <input type="text" id="orderDireccion" placeholder="Dirección de entrega o retiro" class="w-full bg-[#090a0f] border border-white/10 rounded-lg p-2 text-white">
-      <select id="orderPago" onchange="actualizarResumen()" class="w-full bg-[#090a0f] border border-white/10 rounded-lg p-2 text-white">
+      <input type="text" id="orderNombre" placeholder="Tu Nombre Completo"
+        class="w-full bg-[#090a0f] border border-white/10 rounded-lg p-2 text-white">
+      <input type="text" id="orderDireccion" placeholder="Dirección de entrega o retiro"
+        class="w-full bg-[#090a0f] border border-white/10 rounded-lg p-2 text-white">
+      <select id="orderPago" onchange="actualizarResumen()"
+        class="w-full bg-[#090a0f] border border-white/10 rounded-lg p-2 text-white">
         <option value="transferencia">Transferencia (10% OFF)</option>
         <option value="efectivo">Efectivo</option>
       </select>
@@ -81,7 +92,8 @@
         <span class="text-[10px] text-slate-400 block">Total</span>
         <span id="cartTotalDisplay" class="font-black text-lg">$0</span>
       </div>
-      <button onclick="enviarPedidoWhatsApp()" class="px-5 py-2.5 bg-white text-black font-bold text-xs rounded-xl flex items-center gap-2">
+      <button onclick="enviarPedidoWhatsApp()"
+        class="px-5 py-2.5 bg-white text-black font-bold text-xs rounded-xl flex items-center gap-2">
         <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i> WhatsApp
       </button>
     </div>
@@ -110,30 +122,30 @@
     }
 
     const MOCK_PRODUCTOS = [
-      { 
-        id: 901, 
-        nombre: "Buzo Heavy Oversize", 
-        categoria: "ropa", 
-        precio: 65000, 
-        stock: 5, 
-        talles: ["M", "L", "XL"], 
-        colores: ["Negro", "Gris", "Beige"], 
+      {
+        id: 901,
+        nombre: "Buzo Heavy Oversize",
+        categoria: "ropa",
+        precio: 65000,
+        stock: 5,
+        talles: ["M", "L", "XL"],
+        colores: ["Negro", "Gris", "Beige"],
         imagenes: [
           "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=700&q=80",
           "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=700&q=80"
-        ] 
+        ]
       },
-      { 
-        id: 902, 
-        nombre: "Zapatilla Runner Shadow", 
-        categoria: "calzado", 
-        precio: 92000, 
-        stock: 3, 
-        talles: ["40", "41", "42"], 
-        colores: ["Negro", "Blanco"], 
+      {
+        id: 902,
+        nombre: "Zapatilla Runner Shadow",
+        categoria: "calzado",
+        precio: 92000,
+        stock: 3,
+        talles: ["40", "41", "42"],
+        colores: ["Negro", "Blanco"],
         imagenes: [
           "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=700&q=80"
-        ] 
+        ]
       }
     ];
 
@@ -389,7 +401,7 @@
         msg += `• ${c.nombre} [Talle: ${c.talleElegido} | Color: ${c.colorElegido}]%0A`;
       });
       msg += `%0A*TOTAL: ${total}*`;
-      window.open(`https://wa.me/5491123456789?text=${msg}`, '_blank');
+      window.open(`https://wa.me/5493462325547?text=${msg}`, '_blank');
     }
 
     async function cargarStories() {
@@ -401,7 +413,7 @@
       try {
         const { data } = await db.from('historias').select('*').eq('activo', true);
         if (data && data.length > 0) stories = data;
-      } catch (e) {}
+      } catch (e) { }
 
       container.innerHTML = stories.map(s => `
         <div class="flex flex-col items-center gap-1 shrink-0 cursor-pointer">
@@ -416,4 +428,5 @@
     window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
+
 </html>
