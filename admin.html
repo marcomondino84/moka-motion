@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es" class="bg-[#090a0f] text-white">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOKA MOTION - Panel Maestro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="min-h-screen bg-[#090a0f] font-sans antialiased text-slate-100 p-4 max-w-xl mx-auto pb-24">
+
+  <!-- BLOQUEO POR PIN -->
+  <div id="pinScreen" class="flex flex-col items-center justify-center min-h-[80vh]">
+    <div class="w-full bg-[#141721] p-6 rounded-2xl border border-white/10 text-center shadow-2xl">
+      <div class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4 border border-white/10">
+        <i class="fa-solid fa-lock text-lg"></i>
+      </div>
+      <h2 class="text-xl font-bold tracking-wider mb-1">MOKA ADMIN</h2>
+      <p class="text-xs text-slate-400 mb-6">Ingresá el PIN maestro</p>
+      
+      <form id="pinForm" onsubmit="handlePinSubmit(event)">
+        <input type="password" id="pinInput" maxlength="8" placeholder="••••" 
+          class="w-full text-center text-2xl tracking-[0.5em] bg-[#090a0f] border border-white/20 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-white mb-4">
+        <p id="pinError" class="text-xs text-red-400 mb-3 hidden">PIN inválido.</p>
+        <button type="submit" class="w-full py-3 bg-white text-black font-bold rounded-xl hover:bg-slate-200 transition">
+          Ingresar
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- PANEL ADMIN -->
+  <div id="adminPanel" class="hidden">
+    <header class="flex items-center justify-between border-b border-white/10 pb-4 mb-4 pt-2">
+      <div>
+        <h1 class="text-lg font-black tracking-widest uppercase">MOKA ADMIN</h1>
+        <p class="text-[10px] text-slate-400" id="dbStatus">Conectando...</p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="switchTab('tab-pin')" class="text-xs bg-white/5 hover:bg-white/15 px-3 py-2 rounded-lg border border-white/10" title="Cambiar PIN">
+          <i class="fa-solid fa-key"></i>
+        </button>
+        <a href="index.html" class="text-xs bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg transition border border-white/10 flex items-center gap-1.5">
+          <i class="fa-solid fa-store"></i> Tienda
+        </a>
+      </div>
+    </header>
+
+    <!-- Pestañas de navegación -->
+    <div class="flex gap-1.5 mb-5 border-b border-white/10 pb-2 overflow-x-auto text-xs scrollbar-none">
+      <button onclick="switchTab('tab-producto')" id="btn-tab-producto" class="tab-btn font-semibold py-1.5 px-3 rounded-lg bg-white text-black">Prendas</button>
+      <button onclick="switchTab('tab-categorias')" id="btn-tab-categorias" class="tab-btn font-semibold py-1.5 px-3 rounded-lg bg-white/5 text-slate-400">Categorías</button>
+      <button onclick="switchTab('tab-historias')" id="btn-tab-historias" class="tab-btn font-semibold py-1.5 px-3 rounded-lg bg-white/5 text-slate-400">Stories/Popups</button>
+      <button onclick="switchTab('tab-stock')" id="btn-tab-stock" class="tab-btn font-semibold py-1.5 px-3 rounded-lg bg-white/5 text-slate-400">Inventario</button>
+    </div>
+
+    <!-- 1. TAB: CARGAR O EDITAR PRENDA -->
+    <section id="tab-producto" class="space-y-4">
+      <form id="formProducto" onsubmit="guardarProducto(event)" class="bg-[#141721] p-5 rounded-2xl border border-white/10 space-y-4 text-xs">
+        <input type="hidden" id="editProdId" value="">
+        <div class="flex items-center justify-between">
+          <h2 id="formTitle" class="font-bold text-sm text-slate-200">Nueva Prenda</h2>
+          <button type="button" id="btnCancelEdit" onclick="cancelarEdicion()" class="hidden text-[11px] text-red-400 underline">Cancelar Edición</button>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">Nombre de la Prenda</label>
+          <input type="text" id="pNombre" required placeholder="Ej: Hoodie Dark Motion" class="w-full bg-[#090a0f] border border-white/15 rounded-lg p-2.5 text-white">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">Categoría</label>
+            <select id="pCatSelect" class="w-full bg-[#090a0f] border border-white/15 rounded-lg p-2.5 text-white"></select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Precio (ARS)</label>
+            <input type="number" id="pPrecio" required placeholder="55000" class="w-full bg-[#090a0f] border border-white/15 rounded-lg p-2.5 text-white">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">Stock total</label>
+            <input type="number" id="pStock" required value="5" class="w-full bg-[#090a0f] border border-white/15 rounded-lg p-2.5 text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Talles (separados por coma)</label>
+            <input type="text" id="pTalles" placeholder="S, M, L, XL" class="w-full bg-[#090a0f] border border-white/15 rounded-lg p-2.5 text-white">
+          </div>
+        </div>
+
+        <!-- PALETA Y COLORES PERSONALIZABLES -->
+        <div class="border-t border-white/10 pt-3 space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="block text-slate-400">Colores Disponibles</label>
+            <span class="text-[10px] text-slate-500">Marcá los que apliquen</span>
+          </div>
+
+          <!-- Selector para sumar nuevos colores con colorpicker -->
+          <div class="flex items-center gap-2 p-2 bg-[#090a0f] border border-white/10 rounded-xl">
+            <input type="color" id="pickerHex" value="#d4af37" class="w-8 h-8 rounded border-0 bg-transparent cursor-pointer">
+            <input type="text" id="nuevoColorNombre" placeholder="Nombre (ej: Dorado, Lavanda)" class="flex-1 bg-transparent border-b border-white/20 p-1 text-white text-xs focus:outline-none">
+            <button type="button" onclick="agregarNuevoColor()" class="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-white font-semibold text-xs">
+              + Agregar Color
+            </button>
+          </div>
+
+          <!-- Grilla interactiva de colores guardados -->
+          <div class="grid grid-cols-3 gap-2 pt-1" id="paletaColores"></div>
+        </div>
+
+        <!-- GESTOR MULTI-IMAGEN -->
+        <div class="border-t border-white/10 pt-3 space-y-2">
+          <label class="block text-slate-300 font-bold">Imágenes del Producto (Múltiples)</label>
+          
+          <div class="flex gap-2">
+            <input type="url" id="imgUrlInput" placeholder="Pegar URL de foto..." class="flex-1 bg-[#090a0f] border border-white/15 rounded-lg p-2 text-white">
+            <button type="button" onclick="agregarUrlImg()" class="bg-white/10 px-3 rounded-lg hover:bg-white/20">Agregar</button>
+          </div>
+
+          <div class="flex items-center justify-between py-1 text-[11px] text-slate-400">
+            <span>O adjuntar desde tu dispositivo:</span>
+            <label class="flex items-center gap-1 cursor-pointer text-white underline">
+              <input type="checkbox" id="chkAutoOpt" checked class="accent-white">
+              Adaptar formato a la tienda
+            </label>
+          </div>
+
+          <input type="file" id="fileInput" multiple accept="image/*" onchange="handleFileUpload(event)" class="w-full text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-white/10 file:text-white hover:file:bg-white/20 cursor-pointer">
+
+          <div id="previewImages" class="flex gap-2 overflow-x-auto py-2"></div>
+        </div>
+
+        <div class="pt-2 border-t border-white/10 space-y-1.5">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="pPopup" class="accent-white">
+            <span>Mostrar en Modal Popup al abrir la app</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="pOferta" class="accent-white">
+            <span>Marcar en Oferta (Badge Sale)</span>
+          </label>
+        </div>
+
+        <button type="submit" id="btnSubmitProd" class="w-full py-3 bg-white text-black font-bold rounded-xl hover:bg-slate-200 transition">
+          Publicar en Tienda
+        </button>
+      </form>
+    </section>
+
+    <!-- 2. TAB: CATEGORÍAS CON EMOJIS RÁPIDOS Y EDICIÓN -->
+    <section id="tab-categorias" class="hidden space-y-4">
+      <div class="bg-[#141721] p-5 rounded-2xl border border-white/10 text-xs space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-bold text-sm text-slate-200" id="titleCatForm">Gestionar Categorías</h3>
+          <button type="button" id="btnCancelCatEdit" onclick="cancelarEdicionCategoria()" class="hidden text-[11px] text-red-400 underline">Cancelar Edición</button>
+        </div>
+
+        <input type="hidden" id="editCatId" value="">
+
+        <!-- Barra rápida de Emojis -->
+        <div>
+          <label class="block text-slate-400 mb-1">Elegir Emoji rápido:</label>
+          <div class="flex gap-1.5 overflow-x-auto p-2 bg-[#090a0f] rounded-lg border border-white/10 text-base scrollbar-none">
+            <button type="button" onclick="setCatEmoji('👟')" class="p-1 hover:scale-125 transition">👟</button>
+            <button type="button" onclick="setCatEmoji('👕')" class="p-1 hover:scale-125 transition">👕</button>
+            <button type="button" onclick="setCatEmoji('👖')" class="p-1 hover:scale-125 transition">👖</button>
+            <button type="button" onclick="setCatEmoji('🧢')" class="p-1 hover:scale-125 transition">🧢</button>
+            <button type="button" onclick="setCatEmoji('🎒')" class="p-1 hover:scale-125 transition">🎒</button>
+            <button type="button" onclick="setCatEmoji('🕶️')" class="p-1 hover:scale-125 transition">🕶️</button>
+            <button type="button" onclick="setCatEmoji('🧥')" class="p-1 hover:scale-125 transition">🧥</button>
+            <button type="button" onclick="setCatEmoji('🧦')" class="p-1 hover:scale-125 transition">🧦</button>
+            <button type="button" onclick="setCatEmoji('🏷️')" class="p-1 hover:scale-125 transition">🏷️</button>
+            <button type="button" onclick="setCatEmoji('🔥')" class="p-1 hover:scale-125 transition">🔥</button>
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <input type="text" id="catIconoInput" placeholder="Emoji" value="🏷️" class="w-16 bg-[#090a0f] border border-white/15 rounded-lg p-2 text-center text-lg text-white">
+          <input type="text" id="catNombreInput" placeholder="Nombre categoría..." class="flex-1 bg-[#090a0f] border border-white/15 rounded-lg p-2 text-white">
+          <button onclick="guardarCategoria()" id="btnSaveCat" class="bg-white text-black font-bold px-4 rounded-lg">Crear</button>
+        </div>
+
+        <div id="listaCategoriasAdmin" class="space-y-2 pt-2"></div>
+      </div>
+    </section>
+
+   <!-- 3. TAB: HISTORIAS & POPUPS -->
+    <section id="tab-historias" class="hidden space-y-4">
+      <form onsubmit="guardarHistoria(event)" class="bg-[#141721] p-5 rounded-2xl border border-white/10 space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">Título de la Story</label>
+          <input type="text" id="hTitulo" required placeholder="Ej: Nuevo Drop" class="w-full bg-[#090a0f] border border-white/15 rounded-lg p-2 text-white">
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-slate-400">Imagen (URL o Archivo)</label>
+          <div class="flex gap-2">
+            <input type="url" id="hUrl" placeholder="Pegar URL de foto..." class="flex-1 bg-[#090a0f] border border-white/15 rounded-lg p-2 text-white">
+            <button type="button" onclick="cargarStoryUrl()" class="px-3 bg-white/10 hover:bg-white/20 rounded-lg text-white font-semibold">
+              Cargar
+            </button>
+          </div>
+          
+          <div class="pt-1">
+            <input type="file" id="hFileInput" accept="image/*" onchange="handleStoryFile(event)" class="text-slate-400 text-xs file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-white/10 file:text-white cursor-pointer">
+          </div>
+        </div>
+
+        <div id="hPreview" class="hidden flex items-center gap-3 p-2 bg-[#090a0f] rounded-xl border border-white/10">
+          <img id="hPreviewImg" class="w-14 h-20 object-cover rounded-lg border border-white/20">
+          <div class="flex-1">
+            <p class="text-[11px] text-emerald-400 font-bold">Imagen lista</p>
+            <button type="button" onclick="quitarStoryImg()" class="text-[10px] text-red-400 underline mt-1">Quitar foto</button>
+          </div>
+        </div>
+
+        <label class="flex items-center gap-2 cursor-pointer pt-1">
+          <input type="checkbox" id="hPopup" class="accent-white">
+          <span>Abrir como Popup de Bienvenida</span>
+        </label>
+
+        <button type="submit" class="w-full py-3 bg-white text-black font-bold rounded-xl hover:bg-slate-200 transition">Crear Story</button>
+      </form>
+    </section>
+
+    <!-- 4. TAB: INVENTARIO CON BOTÓN EDITAR -->
+    <section id="tab-stock" class="hidden space-y-2">
+      <div id="listaInventario" class="space-y-2 text-xs"></div>
+    </section>
+
+    <!-- 5. TAB: SEGURIDAD (PIN) -->
+    <section id="tab-pin" class="hidden space-y-4">
+      <div class="bg-[#141721] p-5 rounded-2xl border border-white/10 text-xs space-y-3">
+        <h3 class="font-bold text-sm">Cambiar PIN de Acceso</h3>
+        <p class="text-slate-400">Establecé un nuevo PIN numérico para proteger este panel.</p>
+        <input type="password" id="nuevoPin" placeholder="Nuevo PIN" maxlength="8" class="w-full bg-[#090a0f] border border-white/15 rounded-lg p-2.5 text-white">
+        <button onclick="guardarNuevoPin()" class="w-full py-2.5 bg-white text-black font-bold rounded-lg">Guardar PIN</button>
+      </div>
+    </section>
+  </div>
+
+  <canvas id="cropCanvas" class="hidden"></canvas>
+
+ <script>
+  const SUPABASE_URL = 'https://jsymymfchgqadrycchkb.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_5GGAOsVNCKWME8hbvTlcQQ_FxBftQYO';
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  let currentImages = [];
+  let storyImageCurrent = '';
+  let productosCache = [];
+  let categoriasCache = [];
+
+  // ==========================================
+  // PALETA Y COLORES DINÁMICOS
+  // ==========================================
+  const COLORES_BASE = [
+    { nombre: 'Negro', hex: '#000000' },
+    { nombre: 'Blanco', hex: '#ffffff' },
+    { nombre: 'Gris', hex: '#6b7280' },
+    { nombre: 'Beige', hex: '#d2b48c' },
+    { nombre: 'Militar', hex: '#4b5320' },
+    { nombre: 'Azul', hex: '#1e3a8a' },
+    { nombre: 'Rojo', hex: '#b91c1c' },
+    { nombre: 'Bordo', hex: '#581845' }
+  ];
+
+  function getColoresList() {
+    const stored = localStorage.getItem('moka_colores_custom');
+    return stored ? JSON.parse(stored) : COLORES_BASE;
+  }
+
+  function renderPaleta(seleccionados = []) {
+    const container = document.getElementById('paletaColores');
+    const colores = getColoresList();
+    container.innerHTML = colores.map(c => `
+      <label class="flex items-center gap-2 bg-[#090a0f] p-2 rounded-lg border border-white/10 cursor-pointer">
+        <input type="checkbox" value="${c.nombre}" ${seleccionados.includes(c.nombre) ? 'checked' : ''} class="chk-color accent-white">
+        <span class="w-3 h-3 rounded-full border border-white/20 shrink-0" style="background-color: ${c.hex};"></span>
+        <span class="text-[11px] truncate">${c.nombre}</span>
+      </label>
+    `).join('');
+  }
+
+  function agregarNuevoColor() {
+    const nombre = document.getElementById('nuevoColorNombre').value.trim();
+    const hex = document.getElementById('pickerHex').value;
+    if (!nombre) return alert('Ingresá el nombre del color.');
+
+    let lista = getColoresList();
+    if (!lista.some(c => c.nombre.toLowerCase() === nombre.toLowerCase())) {
+      lista.push({ nombre, hex });
+      localStorage.setItem('moka_colores_custom', JSON.stringify(lista));
+    }
+
+    document.getElementById('nuevoColorNombre').value = '';
+    renderPaleta([nombre]);
+  }
+
+  // ==========================================
+  // AUTENTICACIÓN POR PIN
+  // ==========================================
+  function getPin() {
+    return localStorage.getItem('moka_admin_pin') || '1234';
+  }
+
+  function handlePinSubmit(e) {
+    e.preventDefault();
+    if (document.getElementById('pinInput').value.trim() === getPin()) {
+      document.getElementById('pinScreen').classList.add('hidden');
+      document.getElementById('adminPanel').classList.remove('hidden');
+      initAdmin();
+    } else {
+      document.getElementById('pinError').classList.remove('hidden');
+    }
+  }
+
+  function guardarNuevoPin() {
+    const np = document.getElementById('nuevoPin').value.trim();
+    if (np.length < 4) return alert('El PIN debe tener al menos 4 dígitos.');
+    localStorage.setItem('moka_admin_pin', np);
+    alert('¡PIN actualizado correctamente!');
+    switchTab('tab-producto');
+  }
+
+  // ==========================================
+  // INICIALIZACIÓN
+  // ==========================================
+  async function initAdmin() {
+    renderPaleta();
+    try {
+      const { error } = await db.from('productos').select('id').limit(1);
+      if (error) throw error;
+      document.getElementById('dbStatus').innerText = 'Base de datos conectada ✅';
+      cargarCategorias();
+      cargarInventario();
+    } catch (err) {
+      document.getElementById('dbStatus').innerText = 'Error: ' + err.message;
+    }
+  }
+
+  // ==========================================
+  // OPTIMIZADOR CANVAS (IMÁGENES LOCALES)
+  // ==========================================
+  function optimizarImagen(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.getElementById('cropCanvas');
+          const ctx = canvas.getContext('2d');
+          const targetSize = 700;
+          canvas.width = targetSize;
+          canvas.height = targetSize;
+
+          const minDim = Math.min(img.width, img.height);
+          const sx = (img.width - minDim) / 2;
+          const sy = (img.height - minDim) / 2;
+
+          ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, targetSize, targetSize);
+          resolve(canvas.toDataURL('image/jpeg', 0.82));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handleFileUpload(e) {
+    const files = Array.from(e.target.files);
+    for (const file of files) {
+      const optimized = await optimizarImagen(file);
+      currentImages.push(optimized);
+    }
+    renderImagePreviews();
+    e.target.value = '';
+  }
+
+  function agregarUrlImg() {
+    const url = document.getElementById('imgUrlInput').value.trim();
+    if (!url) return;
+    currentImages.push(url);
+    document.getElementById('imgUrlInput').value = '';
+    renderImagePreviews();
+  }
+
+  function renderImagePreviews() {
+    const container = document.getElementById('previewImages');
+    container.innerHTML = currentImages.map((src, idx) => `
+      <div class="relative shrink-0 w-16 h-16 rounded-lg overflow-hidden border border-white/20">
+        <img src="${src}" class="w-full h-full object-cover">
+        <button type="button" onclick="eliminarImg(${idx})" class="absolute top-0 right-0 bg-red-600/80 p-1 text-[10px] text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    `).join('');
+  }
+
+  function eliminarImg(idx) {
+    currentImages.splice(idx, 1);
+    renderImagePreviews();
+  }
+
+  // ==========================================
+  // HISTORIAS / POPUPS
+  // ==========================================
+  function cargarStoryUrl() {
+    const url = document.getElementById('hUrl').value.trim();
+    if (!url) return alert('Por favor pegá una URL válida.');
+    storyImageCurrent = url;
+    document.getElementById('hPreviewImg').src = url;
+    document.getElementById('hPreview').classList.remove('hidden');
+  }
+
+  function quitarStoryImg() {
+    storyImageCurrent = '';
+    document.getElementById('hUrl').value = '';
+    document.getElementById('hFileInput').value = '';
+    document.getElementById('hPreview').classList.add('hidden');
+  }
+
+  async function handleStoryFile(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    storyImageCurrent = await optimizarImagen(file);
+    document.getElementById('hPreviewImg').src = storyImageCurrent;
+    document.getElementById('hPreview').classList.remove('hidden');
+  }
+
+  async function guardarHistoria(e) {
+    e.preventDefault();
+    const titulo = document.getElementById('hTitulo').value.trim();
+    const url = storyImageCurrent || document.getElementById('hUrl').value.trim();
+    if (!url) return alert('Debes adjuntar o cargar una URL de imagen.');
+
+    const { error } = await db.from('historias').insert([{
+      titulo,
+      imagen: url,
+      es_popup: document.getElementById('hPopup').checked,
+      activo: true
+    }]);
+
+    if (error) {
+      alert('Error: ' + error.message);
+    } else {
+      alert('¡Historia publicada con éxito!');
+      document.getElementById('hTitulo').value = '';
+      quitarStoryImg();
+    }
+  }
+
+  // ==========================================
+  // CATEGORÍAS (CREAR Y EDITAR)
+  // ==========================================
+  function setCatEmoji(emoji) {
+    document.getElementById('catIconoInput').value = emoji;
+  }
+
+  async function cargarCategorias() {
+    const { data } = await db.from('categorias').select('*').order('id', { ascending: true });
+    categoriasCache = data && data.length > 0 ? data : [
+      { id: 1, nombre: 'calzado', icono: '👟' },
+      { id: 2, nombre: 'ropa', icono: '👕' },
+      { id: 3, nombre: 'otras', icono: '🎒' }
+    ];
+
+    const select = document.getElementById('pCatSelect');
+    select.innerHTML = categoriasCache.map(c => `<option value="${c.nombre}">${c.icono} ${c.nombre.toUpperCase()}</option>`).join('');
+
+    const listAdmin = document.getElementById('listaCategoriasAdmin');
+    listAdmin.innerHTML = categoriasCache.map(c => `
+      <div class="flex items-center justify-between p-2.5 bg-[#090a0f] border border-white/10 rounded-lg">
+        <span class="font-semibold text-sm">${c.icono} ${c.nombre}</span>
+        <div class="flex items-center gap-1">
+          <button onclick="iniciarEdicionCategoria(${c.id})" class="text-slate-400 hover:text-white p-1.5"><i class="fa-solid fa-pen"></i></button>
+          <button onclick="eliminarCategoria(${c.id})" class="text-red-400 hover:text-red-300 p-1.5"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function iniciarEdicionCategoria(id) {
+    const c = categoriasCache.find(x => x.id === id);
+    if (!c) return;
+    document.getElementById('editCatId').value = c.id;
+    document.getElementById('catIconoInput').value = c.icono;
+    document.getElementById('catNombreInput').value = c.nombre;
+    document.getElementById('titleCatForm').innerText = 'Editar Categoría';
+    document.getElementById('btnSaveCat').innerText = 'Actualizar';
+    document.getElementById('btnCancelCatEdit').classList.remove('hidden');
+  }
+
+  function cancelarEdicionCategoria() {
+    document.getElementById('editCatId').value = '';
+    document.getElementById('catIconoInput').value = '🏷️';
+    document.getElementById('catNombreInput').value = '';
+    document.getElementById('titleCatForm').innerText = 'Gestionar Categorías';
+    document.getElementById('btnSaveCat').innerText = 'Crear';
+    document.getElementById('btnCancelCatEdit').classList.add('hidden');
+  }
+
+  async function guardarCategoria() {
+    const id = document.getElementById('editCatId').value;
+    const nombre = document.getElementById('catNombreInput').value.trim().toLowerCase();
+    const icono = document.getElementById('catIconoInput').value.trim() || '🏷️';
+    if (!nombre) return alert('Ingresá el nombre de la categoría.');
+
+    if (id) {
+      await db.from('categorias').update({ nombre, icono }).eq('id', id);
+      cancelarEdicionCategoria();
+    } else {
+      await db.from('categorias').insert([{ nombre, icono }]);
+      document.getElementById('catNombreInput').value = '';
+    }
+    cargarCategorias();
+  }
+
+  async function eliminarCategoria(id) {
+    if (!confirm('¿Eliminar esta categoría?')) return;
+    await db.from('categorias').delete().eq('id', id);
+    cargarCategorias();
+  }
+
+  // ==========================================
+  // PRENDAS (CREAR, EDITAR, ELIMINAR)
+  // ==========================================
+  async function guardarProducto(e) {
+    e.preventDefault();
+    if (currentImages.length === 0) return alert('Debes agregar al menos una imagen.');
+
+    const editId = document.getElementById('editProdId').value;
+    const btn = document.getElementById('btnSubmitProd');
+    btn.innerText = 'Guardando...';
+    btn.disabled = true;
+
+    const coloresSel = Array.from(document.querySelectorAll('.chk-color:checked')).map(c => c.value);
+    const tallesArr = document.getElementById('pTalles').value.split(',').map(s => s.trim()).filter(Boolean);
+
+    const prodData = {
+      nombre: document.getElementById('pNombre').value,
+      categoria: document.getElementById('pCatSelect').value,
+      precio: parseFloat(document.getElementById('pPrecio').value) || 0,
+      stock: parseInt(document.getElementById('pStock').value) || 1,
+      talles: tallesArr,
+      colores: coloresSel,
+      imagen: currentImages[0],
+      imagenes: currentImages,
+      es_popup: document.getElementById('pPopup').checked,
+      en_oferta: document.getElementById('pOferta').checked
+    };
+
+    let res;
+    if (editId) {
+      res = await db.from('productos').update(prodData).eq('id', editId);
+    } else {
+      res = await db.from('productos').insert([prodData]);
+    }
+
+    btn.innerText = 'Publicar en Tienda';
+    btn.disabled = false;
+
+    if (res.error) {
+      alert('Error: ' + res.error.message);
+    } else {
+      alert(editId ? '¡Prenda actualizada correctamente!' : '¡Prenda publicada en la tienda!');
+      cancelarEdicion();
+      cargarInventario();
+    }
+  }
+
+  async function cargarInventario() {
+    const container = document.getElementById('listaInventario');
+    const { data } = await db.from('productos').select('*').order('id', { ascending: false });
+    productosCache = data || [];
+
+    if (productosCache.length === 0) {
+      container.innerHTML = '<p class="text-slate-500 py-4 text-center">No hay productos cargados.</p>';
+      return;
+    }
+
+    container.innerHTML = productosCache.map(p => `
+      <div class="flex items-center justify-between p-3 bg-[#141721] border border-white/10 rounded-xl">
+        <div class="flex items-center gap-3">
+          <img src="${(p.imagenes && p.imagenes[0]) || p.imagen}" class="w-12 h-12 object-cover rounded-lg">
+          <div>
+            <p class="font-bold text-xs">${p.nombre}</p>
+            <p class="text-[10px] text-slate-400">$${Number(p.precio).toLocaleString('es-AR')} • ${p.categoria} • Stock: ${p.stock}</p>
+            ${p.colores && p.colores.length > 0 ? `<p class="text-[9px] text-slate-500">Colores: ${p.colores.join(', ')}</p>` : ''}
+          </div>
+        </div>
+        <div class="flex items-center gap-1">
+          <button onclick="editarProducto(${p.id})" class="text-slate-300 hover:text-white p-2" title="Editar Prenda">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </button>
+          <button onclick="eliminarProducto(${p.id})" class="text-red-400 hover:text-red-300 p-2" title="Eliminar">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function editarProducto(id) {
+    const p = productosCache.find(x => x.id === id);
+    if (!p) return;
+
+    document.getElementById('editProdId').value = p.id;
+    document.getElementById('formTitle').innerText = 'Editando: ' + p.nombre;
+    document.getElementById('btnCancelEdit').classList.remove('hidden');
+    document.getElementById('btnSubmitProd').innerText = 'Guardar Cambios';
+
+    document.getElementById('pNombre').value = p.nombre;
+    document.getElementById('pCatSelect').value = p.categoria;
+    document.getElementById('pPrecio').value = p.precio;
+    document.getElementById('pStock').value = p.stock;
+    document.getElementById('pTalles').value = (p.talles || []).join(', ');
+    document.getElementById('pPopup').checked = !!p.es_popup;
+    document.getElementById('pOferta').checked = !!p.en_oferta;
+
+    renderPaleta(p.colores || []);
+    currentImages = (p.imagenes && p.imagenes.length > 0) ? [...p.imagenes] : [p.imagen];
+    renderImagePreviews();
+
+    switchTab('tab-producto');
+  }
+
+  function cancelarEdicion() {
+    document.getElementById('formProducto').reset();
+    document.getElementById('editProdId').value = '';
+    document.getElementById('formTitle').innerText = 'Nueva Prenda';
+    document.getElementById('btnCancelEdit').classList.add('hidden');
+    document.getElementById('btnSubmitProd').innerText = 'Publicar en Tienda';
+    currentImages = [];
+    renderImagePreviews();
+    renderPaleta();
+  }
+
+  async function eliminarProducto(id) {
+    if (!confirm('¿Eliminar esta prenda?')) return;
+    await db.from('productos').delete().eq('id', id);
+    cargarInventario();
+  }
+
+  // ==========================================
+  // NAVEGACIÓN ENTRE TABS
+  // ==========================================
+  function switchTab(tabId) {
+    ['tab-producto', 'tab-categorias', 'tab-historias', 'tab-stock', 'tab-pin'].forEach(id => {
+      document.getElementById(id).classList.add('hidden');
+    });
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.className = "tab-btn font-semibold py-1.5 px-3 rounded-lg bg-white/5 text-slate-400";
+    });
+    document.getElementById(tabId).classList.remove('hidden');
+    const activeBtn = document.getElementById('btn-' + tabId);
+    if (activeBtn) activeBtn.className = "tab-btn font-semibold py-1.5 px-3 rounded-lg bg-white text-black";
+    if (tabId === 'tab-categorias') cargarCategorias();
+    if (tabId === 'tab-stock') cargarInventario();
+  }
+</script>
+</body>
+</html>
