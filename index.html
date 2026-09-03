@@ -5,26 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>MOKA MOTION</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --bg: #11141a;
-      --glass-bg: rgba(28, 33, 46, 0.55);
+      --bg: #0b0d13;
       --glass-card: rgba(255, 255, 255, 0.05);
       --glass-border: rgba(255, 255, 255, 0.08);
       --accent-warm: #d97746;
-      --accent-cool: #245266;
       --text: #ffffff;
       --text-dim: #9aa1b2;
       --text-sub: #6c7385;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
 
-    /* FONDO DEGRADADO FASHORA */
     body {
-      background-color: #0b0d13;
+      background-color: var(--bg);
       background-image:
         radial-gradient(ellipse 70% 50% at 90% 0%, rgba(217, 119, 70, 0.28) 0%, transparent 60%),
         radial-gradient(ellipse 60% 50% at 0% 20%, rgba(36, 82, 102, 0.35) 0%, transparent 60%),
@@ -49,18 +46,17 @@
       border-right: 1px solid var(--glass-border);
     }
 
-    /* TOP BAR FASHORA */
+    /* HEADER CON TU LOGO REAL */
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 16px 20px 10px;
     }
-    .brand-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.55rem;
-      letter-spacing: 2px;
-      font-weight: 700;
+    .brand-logo-img {
+      height: 28px;
+      width: auto;
+      object-fit: contain;
     }
     .top-actions { display: flex; align-items: center; gap: 10px; }
     .icon-circle-btn {
@@ -79,7 +75,7 @@
     }
     .icon-circle-btn:hover { background: rgba(255, 255, 255, 0.12); }
 
-    /* STORIES TRAY */
+    /* STORIES */
     .stories-row {
       display: flex;
       gap: 14px;
@@ -90,10 +86,10 @@
     .stories-row::-webkit-scrollbar { display: none; }
     .story-unit { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; flex-shrink: 0; }
     .story-avatar-wrap {
-      width: 60px;
-      height: 60px;
+      width: 62px;
+      height: 62px;
       border-radius: 50%;
-      padding: 2px;
+      padding: 2.5px;
       background: linear-gradient(135deg, rgba(255,255,255,0.4), var(--glass-border));
       position: relative;
     }
@@ -126,7 +122,7 @@
     }
     .story-name { font-size: 0.7rem; color: var(--text-dim); font-weight: 500; max-width: 62px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-    /* CATEGORIES SECTION */
+    /* CATEGORÍAS */
     .section-header {
       display: flex;
       justify-content: space-between;
@@ -134,7 +130,7 @@
       padding: 6px 20px 12px;
     }
     .section-heading { font-size: 1.05rem; font-weight: 700; color: #fff; }
-    .section-link { font-size: 0.75rem; color: var(--text-sub); text-decoration: none; font-weight: 600; }
+    .section-link { font-size: 0.75rem; color: var(--text-sub); text-decoration: none; font-weight: 600; cursor: pointer; }
 
     .categories-scroller {
       display: flex;
@@ -164,10 +160,10 @@
       background: rgba(255, 255, 255, 0.15);
       border-color: rgba(255, 255, 255, 0.3);
     }
-    .category-box i, .category-box span.emoji { font-size: 1.25rem; color: #fff; }
-    .category-title { font-size: 0.65rem; color: var(--text-dim); font-weight: 600; text-align: center; }
+    .category-box span.emoji { font-size: 1.25rem; }
+    .category-title { font-size: 0.65rem; color: var(--text-dim); font-weight: 600; text-align: center; text-transform: capitalize; }
 
-    /* HERO PROMO CARD */
+    /* BANNER DINÁMICO */
     .hero-card-wrap { padding: 0 20px 22px; }
     .hero-card {
       border-radius: 24px;
@@ -175,39 +171,39 @@
       position: relative;
       background: linear-gradient(135deg, rgba(28, 64, 80, 0.8) 0%, rgba(184, 88, 52, 0.75) 100%);
       border: 1px solid rgba(255,255,255,0.12);
-      min-height: 170px;
+      min-height: 160px;
       display: flex;
       align-items: center;
-      padding: 22px;
+      padding: 20px;
+      cursor: pointer;
     }
-    .hero-content { z-index: 2; max-width: 60%; display: flex; flex-direction: column; gap: 6px; }
-    .hero-label { font-size: 0.7rem; color: rgba(255,255,255,0.75); font-weight: 600; }
-    .hero-title { font-size: 1.35rem; font-weight: 800; line-height: 1.15; color: #fff; letter-spacing: 0.5px; }
+    .hero-content { z-index: 2; max-width: 65%; display: flex; flex-direction: column; gap: 6px; }
+    .hero-label { font-size: 0.7rem; color: rgba(255,255,255,0.75); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .hero-title { font-size: 1.25rem; font-weight: 900; line-height: 1.15; color: #fff; }
     .hero-btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       color: #fff;
       font-size: 0.75rem;
-      font-weight: 700;
-      margin-top: 10px;
+      font-weight: 800;
+      margin-top: 6px;
       background: none;
       border: none;
-      cursor: pointer;
     }
     .hero-image-bg {
       position: absolute;
-      right: -10px;
+      right: 0;
       bottom: 0;
       height: 100%;
-      width: 48%;
+      width: 45%;
       object-fit: cover;
       object-position: top;
       mask-image: linear-gradient(to left, rgba(0,0,0,1) 60%, transparent 100%);
       -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 60%, transparent 100%);
     }
 
-    /* PRODUCT GRID RECOMMENDED */
+    /* PRODUCTOS */
     .products-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -224,7 +220,6 @@
       cursor: pointer;
       position: relative;
       backdrop-filter: blur(8px);
-      transition: transform 0.2s;
     }
     .tile-img-box {
       width: 100%;
@@ -239,27 +234,22 @@
       height: 100%;
       object-fit: cover;
     }
-    .btn-like {
+    .tag-sale {
       position: absolute;
       top: 10px;
-      right: 10px;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.35);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(255,255,255,0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      left: 10px;
+      background: #ef4444;
       color: #fff;
-      font-size: 0.8rem;
+      font-size: 0.6rem;
+      font-weight: 900;
+      padding: 3px 6px;
+      border-radius: 6px;
     }
     .tile-info { padding: 12px; display: flex; flex-direction: column; gap: 4px; }
-    .tile-name { font-size: 0.82rem; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .tile-price { font-size: 0.95rem; font-weight: 800; color: #fff; }
+    .tile-name { font-size: 0.82rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tile-price { font-size: 0.95rem; font-weight: 900; color: #fff; }
 
-    /* DOCK NAVBAR FLOTANTE */
+    /* DOCK NAVBAR */
     .bottom-dock {
       position: fixed;
       bottom: 16px;
@@ -267,7 +257,7 @@
       transform: translateX(-50%);
       width: calc(100% - 36px);
       max-width: 404px;
-      background: rgba(18, 22, 31, 0.82);
+      background: rgba(18, 22, 31, 0.85);
       backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border);
       border-radius: 32px;
@@ -287,9 +277,10 @@
       align-items: center;
       gap: 3px;
       font-size: 0.65rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       position: relative;
+      text-decoration: none;
     }
     .dock-link i { font-size: 1.15rem; }
     .dock-link.active { color: #fff; }
@@ -309,11 +300,11 @@
       justify-content: center;
     }
 
-    /* MODAL POPUP ESTÁTICO (NO SE CIERRA SOLO) */
+    /* POPUP MANUAL PERSISTENTE */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.75);
+      background: rgba(0,0,0,0.8);
       backdrop-filter: blur(10px);
       z-index: 100;
       display: none;
@@ -341,8 +332,8 @@
       width: 34px;
       height: 34px;
       border-radius: 50%;
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.2);
       color: #fff;
       display: flex;
       align-items: center;
@@ -354,9 +345,8 @@
     .modal-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
     .modal-body { padding: 18px; display: flex; flex-direction: column; gap: 8px; }
     .modal-title { font-size: 1.1rem; font-weight: 800; }
-    .modal-desc { font-size: 0.75rem; color: var(--text-dim); }
 
-    /* DRAWER DETALLE DE PRODUCTO Y CHECKOUT */
+    /* DETALLE PRENDA Y CHECKOUT */
     .drawer-overlay {
       position: fixed;
       inset: 0;
@@ -405,7 +395,6 @@
       font-size: 0.85rem;
       cursor: pointer;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
       width: 100%;
       margin-top: 6px;
     }
@@ -423,66 +412,66 @@
 <body>
 
   <div class="app-frame">
-    <!-- TOP BAR -->
+    <!-- HEADER -->
     <div class="top-bar">
-      <div class="brand-title">MOKA</div>
+      <img src="logo.png" alt="Moka Motion" class="brand-logo-img">
       <div class="top-actions">
-        <a href="admin.html" class="icon-circle-btn" title="Admin"><i class="fa-solid fa-gear"></i></a>
+        <a href="admin.html" class="icon-circle-btn" title="Panel de Control"><i class="fa-solid fa-gear"></i></a>
         <button class="icon-circle-btn" onclick="abrirDrawerCarrito()"><i class="fa-solid fa-bag-shopping"></i></button>
       </div>
     </div>
 
-    <!-- STORIES (ESTILO CÍRCULOS FASHORA) -->
+    <!-- STORIES -->
     <div class="stories-row" id="storiesContainer"></div>
 
-    <!-- CATEGORIES -->
+    <!-- CATEGORÍAS -->
     <div class="section-header">
-      <h2 class="section-heading">Categories</h2>
-      <a href="#" class="section-link" onclick="filtrarCat('todos'); return false;">View all</a>
+      <h2 class="section-heading">Categorías</h2>
+      <span class="section-link" onclick="filtrarCat('todos')">Ver todas</span>
     </div>
     <div class="categories-scroller" id="categoriesContainer"></div>
 
-    <!-- HERO PROMO CARD -->
+    <!-- BANNER DINÁMICO (TOMA TU PRODUCTO O DROP DESTACADO) -->
     <div class="hero-card-wrap">
-      <div class="hero-card">
+      <div class="hero-card" id="heroCardBanner" onclick="clickBannerDestacado()">
         <div class="hero-content">
-          <span class="hero-label">New Collection</span>
-          <h1 class="hero-title">SPRING /<br>SUMMER '26</h1>
-          <button class="hero-btn" onclick="filtrarCat('todos')">Explore now <i class="fa-solid fa-arrow-right"></i></button>
+          <span class="hero-label" id="heroTag">Nueva Colección</span>
+          <h1 class="hero-title" id="heroTitle">MOKA MOTION</h1>
+          <div class="hero-btn">Ver producto <i class="fa-solid fa-arrow-right"></i></div>
         </div>
-        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600" class="hero-image-bg" alt="Collection">
+        <img id="heroImage" src="" class="hero-image-bg" alt="Destacado">
       </div>
     </div>
 
-    <!-- RECOMMENDED / GRID PRODUCTOS -->
+    <!-- RECOMENDADOS -->
     <div class="section-header">
-      <h2 class="section-heading">Recommended for you</h2>
+      <h2 class="section-heading">Prendas recomendadas</h2>
     </div>
     <div class="products-grid" id="productsGrid"></div>
 
-    <!-- BOTTOM DOCK -->
+    <!-- DOCK NAVBAR -->
     <nav class="bottom-dock">
       <button class="dock-link active" onclick="filtrarCat('todos')">
         <i class="fa-solid fa-house"></i>
-        <span>Home</span>
+        <span>Inicio</span>
       </button>
       <button class="dock-link" onclick="filtrarCat('todos')">
         <i class="fa-solid fa-bag-shopping"></i>
-        <span>Shop</span>
+        <span>Tienda</span>
       </button>
       <button class="dock-link" onclick="abrirDrawerCarrito()">
         <i class="fa-solid fa-cart-shopping"></i>
-        <span>Cart</span>
+        <span>Carrito</span>
         <div class="dock-badge" id="dockCartCount">0</div>
       </button>
-      <a href="admin.html" class="dock-link" style="text-decoration:none;">
+      <a href="admin.html" class="dock-link">
         <i class="fa-solid fa-user"></i>
-        <span>Profile</span>
+        <span>Admin</span>
       </a>
     </nav>
   </div>
 
-  <!-- MODAL POPUP ESTÁTICO DE BIENVENIDA O PRENDA (NO SE CIERRA SOLO) -->
+  <!-- POPUP MANUAL PERSISTENTE (SOLO SE CIERRA TOCANDO LA CRUZ) -->
   <div class="modal-backdrop" id="staticPopupModal" onclick="if(event.target===this) cerrarModalPopup()">
     <div class="modal-box">
       <div class="modal-close-ico" onclick="cerrarModalPopup()"><i class="fa-solid fa-xmark"></i></div>
@@ -491,8 +480,7 @@
       </div>
       <div class="modal-body">
         <div class="modal-title" id="popupTitle">MOKA MOTION</div>
-        <div class="modal-desc" id="popupDesc">Colección disponible.</div>
-        <button class="btn-action-solid" onclick="cerrarModalPopup()">VER AHORA</button>
+        <button class="btn-action-solid" onclick="cerrarModalPopup()">ENTENDIDO</button>
       </div>
     </div>
   </div>
@@ -504,15 +492,15 @@
         <h3 id="pDetailName" style="font-weight:800; font-size:1.1rem;">Prenda</h3>
         <button onclick="cerrarDrawerProd()" style="background:none; border:none; color:var(--text-dim); font-size:1.2rem; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div id="pDetailPrice" style="font-size:1.25rem; font-weight:800;">$0</div>
+      <div id="pDetailPrice" style="font-size:1.25rem; font-weight:900; color:var(--accent-warm);">$0</div>
 
       <div id="tallesWrap">
-        <div class="chip-selector-title">Select Size</div>
+        <div class="chip-selector-title">Seleccionar Talle</div>
         <div class="chip-list" id="pDetailTalles"></div>
       </div>
 
       <div id="coloresWrap">
-        <div class="chip-selector-title">Select Color</div>
+        <div class="chip-selector-title">Seleccionar Color</div>
         <div class="chip-list" id="pDetailColores"></div>
       </div>
 
@@ -520,7 +508,7 @@
     </div>
   </div>
 
-  <!-- DRAWER CARRITO / WHATSAPP -->
+  <!-- DRAWER CARRITO / CHECKOUT -->
   <div class="drawer-overlay" id="cartDrawer" onclick="if(event.target===this) cerrarDrawerCarrito()">
     <div class="drawer-card">
       <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -551,6 +539,7 @@
     let listaProductos = [];
     let carrito = [];
     let prodActual = null;
+    let prodBannerId = null;
     let talleElegido = '';
     let colorElegido = '';
 
@@ -567,10 +556,10 @@
       let html = `
         <div class="story-unit" onclick="window.location.href='admin.html'">
           <div class="story-avatar-wrap">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200" alt="Add">
+            <img src="logo.png" alt="Admin">
             <div class="story-add-badge">+</div>
           </div>
-          <span class="story-name">Add story</span>
+          <span class="story-name">Crear</span>
         </div>
       `;
 
@@ -591,7 +580,6 @@
       if (!s) return;
       document.getElementById('popupImg').src = s.imagen;
       document.getElementById('popupTitle').innerText = s.titulo;
-      document.getElementById('popupDesc').innerText = 'Story destacada de la colección.';
       document.getElementById('staticPopupModal').classList.add('open');
     }
 
@@ -604,7 +592,6 @@
       if (pStory) {
         document.getElementById('popupImg').src = pStory.imagen;
         document.getElementById('popupTitle').innerText = pStory.titulo;
-        document.getElementById('popupDesc').innerText = 'Novedades de temporada.';
         document.getElementById('staticPopupModal').classList.add('open');
         return;
       }
@@ -618,8 +605,7 @@
       const { data } = await db.from('categorias').select('*').order('id', { ascending: true });
       const cats = data && data.length > 0 ? data : [
         { id: 1, nombre: 'calzado', icono: '👟' },
-        { id: 2, nombre: 'ropa', icono: '👕' },
-        { id: 3, nombre: 'anteojos', icono: '🕶️' }
+        { id: 2, nombre: 'ropa', icono: '👕' }
       ];
 
       const cont = document.getElementById('categoriesContainer');
@@ -634,13 +620,28 @@
     async function cargarProductos() {
       const { data } = await db.from('productos').select('*').order('id', { ascending: false });
       listaProductos = data || [];
+      renderBannerHero(listaProductos);
       renderGrid(listaProductos);
+    }
+
+    function renderBannerHero(items) {
+      if (items.length === 0) return;
+      const destacado = items.find(p => p.en_oferta) || items[0];
+      prodBannerId = destacado.id;
+      document.getElementById('heroTitle').innerText = destacado.nombre;
+      document.getElementById('heroTag').innerText = destacado.en_oferta ? 'En Oferta' : 'Destacado';
+      const foto = (destacado.imagenes && destacado.imagenes[0]) || destacado.imagen || '';
+      document.getElementById('heroImage').src = foto;
+    }
+
+    function clickBannerDestacado() {
+      if (prodBannerId) abrirDrawerProd(prodBannerId);
     }
 
     function renderGrid(items) {
       const grid = document.getElementById('productsGrid');
       if (items.length === 0) {
-        grid.innerHTML = '<p style="grid-column:span 2; text-align:center; color:var(--text-dim); padding:30px 0; font-size:0.8rem;">No hay prendas en esta sección</p>';
+        grid.innerHTML = '<p style="grid-column:span 2; text-align:center; color:var(--text-dim); padding:30px 0; font-size:0.8rem;">No hay prendas cargadas</p>';
         return;
       }
 
@@ -650,7 +651,7 @@
           <div class="product-tile" onclick="abrirDrawerProd(${p.id})">
             <div class="tile-img-box">
               <img src="${foto}" alt="${p.nombre}">
-              <button class="btn-like" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
+              ${p.en_oferta ? '<span class="tag-sale">SALE</span>' : ''}
             </div>
             <div class="tile-info">
               <div class="tile-name">${p.nombre}</div>
@@ -771,7 +772,7 @@
     function checkoutWA() {
       const nom = document.getElementById('custName').value.trim();
       const dir = document.getElementById('custAddr').value.trim();
-      if (!nom || !dir) return alert('Por favor ingresá tu nombre y dirección.');
+      if (!nom || !dir) return alert('Por favor completá tu nombre y dirección.');
       if (carrito.length === 0) return alert('El carrito está vacío.');
 
       let total = 0;
