@@ -12,7 +12,7 @@
   
   <style>
     :root {
-      --bg-dark: #07090e;
+      --bg-dark: #121824;
       --bg-surface: rgba(18, 24, 38, 0.7);
       --glass-card: rgba(255, 255, 255, 0.04);
       --glass-card-hover: rgba(255, 255, 255, 0.08);
@@ -40,15 +40,17 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* FONDO ATMOSFÉRICO CINEMÁTICO INSPIRADO EN FASHORA */
+    /* FONDO ATMOSFÉRICO: TECH GRID & AURORA LÍQUIDA (OPCIÓN A SELECCIONADA) */
     body {
-      background-color: var(--bg-dark);
+      background-color: #111722;
       background-image: 
-        radial-gradient(circle 500px at 15% 10%, rgba(26, 68, 86, 0.38) 0%, transparent 70%),
-        radial-gradient(circle 450px at 85% 25%, rgba(199, 93, 49, 0.28) 0%, transparent 70%),
-        radial-gradient(circle 600px at 50% 65%, rgba(17, 33, 48, 0.25) 0%, transparent 80%),
-        radial-gradient(circle 500px at 80% 90%, rgba(184, 80, 40, 0.2) 0%, transparent 70%),
-        linear-gradient(180deg, #07090e 0%, #0a0d14 100%);
+        radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px),
+        radial-gradient(circle 520px at 15% 12%, rgba(56, 189, 248, 0.32) 0%, transparent 70%),
+        radial-gradient(circle 500px at 85% 20%, rgba(148, 163, 184, 0.3) 0%, transparent 70%),
+        radial-gradient(circle 600px at 50% 65%, rgba(35, 68, 105, 0.35) 0%, transparent 75%),
+        radial-gradient(circle 520px at 80% 90%, rgba(56, 189, 248, 0.25) 0%, transparent 70%),
+        linear-gradient(180deg, #0e141f 0%, #131b28 50%, #0d121c 100%);
+      background-size: 24px 24px, auto, auto, auto, auto, auto;
       background-attachment: fixed;
       color: var(--text);
       display: flex;
