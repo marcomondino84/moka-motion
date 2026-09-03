@@ -1,316 +1,419 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="bg-[#090a0f] text-white selection:bg-white selection:text-black">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>MOKA MOTION</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root {
-      --bg: #090a0f;
-      --card-bg: #12141c;
-      --border: #232738;
-      --accent: #00ff88;
-      --text-main: #f3f4f6;
-      --text-muted: #8e95a5;
-      --red: #ff3366;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: var(--bg); color: var(--text-main); padding-bottom: 90px; }
-
-    /* HEADER */
-    header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 18px 20px; position: sticky; top: 0; background: rgba(9, 10, 15, 0.9);
-      backdrop-filter: blur(12px); z-index: 50; border-bottom: 1px solid var(--border);
-    }
-    .logo-container { display: flex; align-items: center; gap: 8px; }
-    .logo-text { font-size: 1.25rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
-    .logo-text span { color: var(--accent); }
-    .btn-admin {
-      background: transparent; border: 1px solid var(--border); color: var(--text-muted);
-      padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; text-decoration: none; font-weight: 600;
-    }
-
-    /* STORIES */
-    .section-title { font-size: 0.7rem; font-weight: 800; letter-spacing: 1.5px; color: var(--text-muted); margin: 16px 20px 10px; text-transform: uppercase; }
-    .stories-bar { display: flex; gap: 14px; overflow-x: auto; padding: 0 20px 12px; scrollbar-width: none; }
-    .stories-bar::-webkit-scrollbar { display: none; }
-    .story-bubble { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; flex-shrink: 0; }
-    .story-ring {
-      width: 66px; height: 66px; border-radius: 50%; padding: 2px;
-      background: linear-gradient(45deg, var(--accent), #00bfff, var(--red));
-      display: flex; align-items: center; justify-content: center;
-    }
-    .story-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--bg); }
-    .story-label { font-size: 0.7rem; font-weight: 600; color: var(--text-main); max-width: 70px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
-
-    /* FILTROS */
-    .filter-bar { display: flex; gap: 8px; overflow-x: auto; padding: 6px 20px 16px; scrollbar-width: none; }
-    .filter-btn {
-      background: var(--card-bg); border: 1px solid var(--border); color: var(--text-muted);
-      padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; white-space: nowrap;
-    }
-    .filter-btn.active { background: var(--text-main); color: var(--bg); border-color: var(--text-main); }
-
-    /* GRID PRODUCTOS */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px; padding: 0 20px; }
-    .card {
-      background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px;
-      overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s;
-    }
-    .card-img-wrap { position: relative; width: 100%; padding-top: 120%; overflow: hidden; background: #1a1d28; }
-    .card-img-wrap img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
-    .card-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; justify-content: space-between; }
-    .card-title { font-size: 0.85rem; font-weight: 600; line-height: 1.2; }
-    .card-price { font-size: 1rem; font-weight: 900; color: var(--accent); }
-    .btn-buy {
-      width: 100%; background: #232738; color: var(--text-main); border: 1px solid transparent;
-      padding: 9px; border-radius: 10px; font-weight: 700; font-size: 0.75rem; cursor: pointer; text-transform: uppercase;
-    }
-    .btn-buy:hover { background: var(--text-main); color: var(--bg); }
-
-    /* DOCK FLOTANTE INFERIOR */
-    .bottom-dock {
-      position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
-      width: calc(100% - 40px); max-width: 420px; background: rgba(18, 20, 28, 0.85);
-      backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: 28px;
-      display: flex; justify-content: space-around; align-items: center; padding: 10px 16px; z-index: 80;
-    }
-    .dock-item {
-      background: none; border: none; color: var(--text-muted); display: flex; flex-direction: column;
-      align-items: center; gap: 4px; font-size: 0.65rem; font-weight: 700; cursor: pointer; position: relative;
-    }
-    .dock-item.active { color: var(--accent); }
-    .dock-badge {
-      position: absolute; top: -4px; right: 2px; background: var(--accent); color: var(--bg);
-      font-size: 0.65rem; font-weight: 900; width: 16px; height: 16px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    /* MODAL DE HISTORIA COMPLETA */
-    .story-overlay {
-      display: none; position: fixed; inset: 0; background: #000; z-index: 100;
-      flex-direction: column; align-items: center; justify-content: center;
-    }
-    .story-overlay.open { display: flex; }
-    .story-full-img { max-width: 100%; max-height: 85vh; object-fit: contain; }
-    .story-close {
-      position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2);
-      border: none; color: #fff; width: 38px; height: 38px; border-radius: 50%; font-size: 1.2rem; cursor: pointer;
-    }
-    .story-caption { position: absolute; bottom: 30px; font-weight: 700; color: #fff; background: rgba(0,0,0,0.6); padding: 8px 18px; border-radius: 20px; }
-
-    /* MODAL CARRITO */
-    .cart-drawer {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 90;
-      align-items: flex-end; backdrop-filter: blur(4px);
-    }
-    .cart-drawer.open { display: flex; }
-    .cart-content {
-      background: var(--card-bg); width: 100%; max-width: 500px; margin: 0 auto;
-      border-radius: 24px 24px 0 0; padding: 24px; border: 1px solid var(--border);
-      max-height: 85vh; display: flex; flex-direction: column; gap: 14px; overflow-y: auto;
-    }
-    .input-field {
-      width: 100%; background: #0c0d12; border: 1px solid var(--border);
-      color: #fff; padding: 12px 14px; border-radius: 12px; font-size: 0.9rem;
-    }
-    .btn-checkout {
-      width: 100%; background: var(--accent); color: var(--bg); border: none;
-      padding: 14px; border-radius: 14px; font-weight: 900; font-size: 0.95rem; cursor: pointer; text-transform: uppercase;
-    }
-  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body class="font-sans antialiased text-white min-h-screen bg-[#090a0f] pb-24 select-none">
 
-  <header>
-    <div class="logo-container">
-      <div class="logo-text">MOKA<span>MOTION</span></div>
+  <!-- HEADER -->
+  <header class="sticky top-0 z-30 bg-[#090a0f]/90 backdrop-blur-md border-b border-white/10 px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="text-base font-black tracking-widest uppercase">MOKA<span class="text-xs text-slate-400 font-light ml-1">MOTION</span></span>
     </div>
-    <a href="admin.html" class="btn-admin">PANEL ADMIN</a>
+    <div class="flex items-center gap-3">
+      <a href="admin.html" class="text-slate-400 hover:text-white text-xs px-2.5 py-1 bg-white/5 border border-white/10 rounded-lg">Admin</a>
+      <button onclick="toggleCart()" class="relative p-2 text-slate-300 hover:text-white">
+        <i class="fa-solid fa-bag-shopping text-base"></i>
+        <span id="cartCount" class="hidden absolute top-0 right-0 bg-white text-black font-bold text-[9px] w-4 h-4 rounded-full flex items-center justify-center">0</span>
+      </button>
+    </div>
   </header>
 
-  <div class="section-title">DROPS & STORIES</div>
-  <div class="stories-bar" id="storiesContainer">
-    <!-- Stories dinámicas -->
+  <!-- STORIES / DROPS -->
+  <section class="pt-4 px-4">
+    <div class="flex items-center justify-between mb-2">
+      <h2 class="text-[10px] uppercase font-bold tracking-widest text-slate-400">Drops & Stories</h2>
+      <span class="text-[9px] text-slate-500 uppercase">Tap para ver</span>
+    </div>
+    <div id="storiesContainer" class="flex gap-3 overflow-x-auto pb-2 scrollbar-none"></div>
+  </section>
+
+  <!-- FILTROS Y BUSCADOR -->
+  <section class="px-4 mt-3 space-y-3">
+    <div class="relative">
+      <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-500 text-xs"></i>
+      <input type="text" id="searchInput" oninput="filtrarCatalogo()" placeholder="Buscar prendas..." 
+        class="w-full bg-[#141721] border border-white/10 rounded-xl py-2 pl-9 pr-4 text-xs text-white placeholder-slate-500 focus:outline-none">
+    </div>
+
+    <!-- Categorías Dinámicas -->
+    <div id="categoryPills" class="flex gap-2 overflow-x-auto pb-1 scrollbar-none text-xs"></div>
+  </section>
+
+  <!-- CATÁLOGO -->
+  <main class="px-4 mt-5">
+    <div id="gridProductos" class="grid grid-cols-2 gap-3"></div>
+    <div id="emptyCatalog" class="hidden text-center py-16 text-slate-500 text-xs">
+      <i class="fa-solid fa-box-open text-2xl mb-2 text-slate-600 block"></i>
+      No hay prendas disponibles en este momento.
+    </div>
+  </main>
+
+  <!-- BOTTOM SHEET DETALLE PRODUCTO -->
+  <div id="sheetBackdrop" onclick="closeSheet()" class="hidden fixed inset-0 z-40 bg-black/75 backdrop-blur-xs"></div>
+  <div id="productSheet" class="hidden fixed inset-x-0 bottom-0 z-50 max-h-[90vh] bg-[#141721] border-t border-white/15 rounded-t-[1.5rem] p-5 overflow-y-auto">
+    <div id="sheetContent"></div>
   </div>
 
-  <div class="filter-bar">
-    <button class="filter-btn active" onclick="filtrar('todos')">Todos</button>
-    <button class="filter-btn" onclick="filtrar('calzado')">Calzado</button>
-    <button class="filter-btn" onclick="filtrar('ropa')">Ropa</button>
-    <button class="filter-btn" onclick="filtrar('accesorios')">Accesorios</button>
-  </div>
-
-  <div class="grid" id="catalogoGrid"></div>
-
-  <!-- DOCK INFERIOR -->
-  <nav class="bottom-dock">
-    <button class="dock-item active" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-      <span>TIENDA</span>
-    </button>
-    <button class="dock-item" onclick="abrirCarrito()">
-      <span>CARRITO</span>
-      <div class="dock-badge" id="cartCount">0</div>
-    </button>
-  </nav>
-
-  <!-- MODAL STORIES -->
-  <div class="story-overlay" id="storyOverlay">
-    <button class="story-close" onclick="cerrarStory()">✕</button>
-    <img id="storyViewerImg" class="story-full-img" src="" alt="Story">
-    <div class="story-caption" id="storyViewerCaption"></div>
-  </div>
-
-  <!-- MODAL CARRITO / CHECKOUT -->
-  <div class="cart-drawer" id="cartDrawer" onclick="if(event.target === this) cerrarCarrito()">
-    <div class="cart-content">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="font-weight:900;">TU PEDIDO</h3>
-        <button onclick="cerrarCarrito()" style="background:none; border:none; color:var(--text-muted); font-size:1.2rem; cursor:pointer;">✕</button>
+  <!-- CARRITO -->
+  <div id="cartBackdrop" onclick="toggleCart()" class="hidden fixed inset-0 z-40 bg-black/75 backdrop-blur-xs"></div>
+  <div id="cartSheet" class="hidden fixed inset-x-0 bottom-0 z-50 max-h-[90vh] bg-[#141721] border-t border-white/15 rounded-t-[1.5rem] p-5 overflow-y-auto">
+    <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+      <h3 class="font-bold text-sm tracking-wider uppercase">Tu Pedido</h3>
+      <button onclick="toggleCart()" class="text-slate-400 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+    </div>
+    <div id="cartItemsList" class="space-y-3 mb-5 max-h-48 overflow-y-auto"></div>
+    <div class="space-y-3 text-xs border-t border-white/10 pt-4">
+      <input type="text" id="orderNombre" placeholder="Tu Nombre Completo" class="w-full bg-[#090a0f] border border-white/10 rounded-lg p-2 text-white">
+      <input type="text" id="orderDireccion" placeholder="Dirección de entrega o retiro" class="w-full bg-[#090a0f] border border-white/10 rounded-lg p-2 text-white">
+      <select id="orderPago" onchange="actualizarResumen()" class="w-full bg-[#090a0f] border border-white/10 rounded-lg p-2 text-white">
+        <option value="transferencia">Transferencia (10% OFF)</option>
+        <option value="efectivo">Efectivo</option>
+      </select>
+    </div>
+    <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
+      <div>
+        <span class="text-[10px] text-slate-400 block">Total</span>
+        <span id="cartTotalDisplay" class="font-black text-lg">$0</span>
       </div>
-      <div id="cartItems" style="display:flex; flex-direction:column; gap:10px; max-height:200px; overflow-y:auto;"></div>
-      
-      <input type="text" id="custNombre" class="input-field" placeholder="Tu Nombre">
-      <input type="text" id="custDireccion" class="input-field" placeholder="Dirección / Destino">
-      
-      <div style="display:flex; justify-content:space-between; font-weight:900; font-size:1.1rem; margin-top:8px;">
-        <span>TOTAL</span>
-        <span id="cartTotal" style="color:var(--accent);">$0</span>
-      </div>
-      
-      <button class="btn-checkout" onclick="enviarWhatsApp()">FINALIZAR POR WHATSAPP</button>
+      <button onclick="enviarPedidoWhatsApp()" class="px-5 py-2.5 bg-white text-black font-bold text-xs rounded-xl flex items-center gap-2">
+        <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i> WhatsApp
+      </button>
     </div>
   </div>
 
   <script>
-    // REEMPLAZÁ CON TUS CLAVES REALES DE SUPABASE
-    const SUPABASE_URL = 'TU_SUPABASE_URL';
-    const SUPABASE_KEY = 'TU_SUPABASE_ANON_KEY';
-    const supabaseClient = (SUPABASE_URL !== 'TU_SUPABASE_URL') ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+    const SUPABASE_URL = 'https://jsymymfchgqadrycchkb.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_5GGAOsVNCKWME8hbvTlcQQ_FxBftQYO';
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Mapeo automático de nombres a colores HEX
+    function obtenerHexColor(nombre) {
+      const mapa = {
+        'negro': '#000000',
+        'blanco': '#ffffff',
+        'gris': '#6b7280',
+        'beige': '#d2b48c',
+        'militar': '#4b5320',
+        'azul': '#1e3a8a',
+        'rojo': '#b91c1c',
+        'bordo': '#581845',
+        'verde': '#15803d',
+        'amarillo': '#eab308'
+      };
+      return mapa[nombre.toLowerCase().trim()] || '#71717a';
+    }
+
+    const MOCK_PRODUCTOS = [
+      { 
+        id: 901, 
+        nombre: "Buzo Heavy Oversize", 
+        categoria: "ropa", 
+        precio: 65000, 
+        stock: 5, 
+        talles: ["M", "L", "XL"], 
+        colores: ["Negro", "Gris", "Beige"], 
+        imagenes: [
+          "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=700&q=80",
+          "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=700&q=80"
+        ] 
+      },
+      { 
+        id: 902, 
+        nombre: "Zapatilla Runner Shadow", 
+        categoria: "calzado", 
+        precio: 92000, 
+        stock: 3, 
+        talles: ["40", "41", "42"], 
+        colores: ["Negro", "Blanco"], 
+        imagenes: [
+          "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=700&q=80"
+        ] 
+      }
+    ];
 
     let productos = [];
-    let stories = [];
+    let categorias = [];
+    let categoriaActiva = 'todos';
     let carrito = [];
-    const MI_WHATSAPP = '5493462556677'; // TU NÚMERO
+    let selectedTalle = null;
+    let selectedColor = null;
 
-    // 1. CARGA DE HISTORIAS CON APERTURA CORRECTA
-    async function cargarStories() {
-      const container = document.getElementById('storiesContainer');
-      if (supabaseClient) {
-        const { data } = await supabaseClient.from('stories').select('*').order('id', { ascending: false });
-        stories = data || [];
-      } else {
-        stories = [
-          { id: 1, titulo: 'Drop 01', imagen: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=800' },
-          { id: 2, titulo: 'Promo', imagen: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800' }
+    async function init() {
+      await cargarCategorias();
+      await cargarProductos();
+      cargarStories();
+    }
+
+    async function cargarCategorias() {
+      try {
+        const { data } = await db.from('categorias').select('*').order('id', { ascending: true });
+        categorias = (data && data.length > 0) ? data : [
+          { nombre: 'calzado', icono: '👟' },
+          { nombre: 'ropa', icono: '👕' },
+          { nombre: 'otras', icono: '🎒' }
         ];
+      } catch (e) {
+        categorias = [{ nombre: 'ropa', icono: '👕' }, { nombre: 'calzado', icono: '👟' }];
       }
 
-      container.innerHTML = stories.map((s, index) => `
-        <div class="story-bubble" onclick="abrirStory(${index})">
-          <div class="story-ring"><img src="${s.imagen}" alt="${s.titulo}"></div>
-          <span class="story-label">${s.titulo}</span>
-        </div>
-      `).join('');
+      const pCont = document.getElementById('categoryPills');
+      pCont.innerHTML = `
+        <button onclick="setCategoria('todos')" id="cat-todos" class="cat-pill whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white text-black font-semibold">Todos</button>
+        ${categorias.map(c => `
+          <button onclick="setCategoria('${c.nombre}')" id="cat-${c.nombre}" class="cat-pill whitespace-nowrap px-3.5 py-1.5 rounded-full bg-[#141721] text-slate-400 border border-white/10">${c.icono} ${c.nombre}</button>
+        `).join('')}
+      `;
     }
 
-    function abrirStory(index) {
-      const item = stories[index];
-      if (!item) return;
-      document.getElementById('storyViewerImg').src = item.imagen;
-      document.getElementById('storyViewerCaption').innerText = item.titulo;
-      document.getElementById('storyOverlay').classList.add('open');
-    }
-
-    function cerrarStory() {
-      document.getElementById('storyOverlay').classList.remove('open');
-    }
-
-    // 2. CATÁLOGO
-    async function cargarCatalogo() {
-      const grid = document.getElementById('catalogoGrid');
-      if (supabaseClient) {
-        const { data } = await supabaseClient.from('productos').select('*');
-        productos = data || [];
-      } else {
-        productos = [
-          { id: 1, nombre: 'Pantalón Cargo Táctico', categoria: 'ropa', precio: 18000, imagen: 'https://images.unsplash.com/photo-1517445312882-bc9910d016b7?w=600' },
-          { id: 2, nombre: 'Zapatillas Retro Motion', categoria: 'calzado', precio: 34000, imagen: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600' }
-        ];
+    async function cargarProductos() {
+      try {
+        const { data, error } = await db.from('productos').select('*').order('id', { ascending: false });
+        if (!error && data && data.length > 0) {
+          productos = data.map(p => ({
+            ...p,
+            imagenes: (p.imagenes && p.imagenes.length > 0) ? p.imagenes : [p.imagen]
+          }));
+        } else {
+          productos = MOCK_PRODUCTOS;
+        }
+      } catch (e) {
+        productos = MOCK_PRODUCTOS;
       }
-      renderizar(productos);
+      filtrarCatalogo();
     }
 
-    function renderizar(lista) {
-      document.getElementById('catalogoGrid').innerHTML = lista.map(p => `
-        <div class="card">
-          <div class="card-img-wrap"><img src="${p.imagen}" alt="${p.nombre}"></div>
-          <div class="card-body">
-            <div class="card-title">${p.nombre}</div>
-            <div class="card-price">$${p.precio.toLocaleString('es-AR')}</div>
-            <button class="btn-buy" onclick="agregarAlCarrito(${p.id})">Agregar</button>
+    function setCategoria(c) {
+      categoriaActiva = c;
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        btn.className = "cat-pill whitespace-nowrap px-3.5 py-1.5 rounded-full bg-[#141721] text-slate-400 border border-white/10";
+      });
+      const active = document.getElementById('cat-' + c);
+      if (active) active.className = "cat-pill whitespace-nowrap px-3.5 py-1.5 rounded-full bg-white text-black font-semibold";
+      filtrarCatalogo();
+    }
+
+    function filtrarCatalogo() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      const filtrados = productos.filter(p => {
+        const matchC = categoriaActiva === 'todos' || p.categoria === categoriaActiva;
+        const matchQ = !q || p.nombre.toLowerCase().includes(q);
+        return matchC && matchQ;
+      });
+
+      const grid = document.getElementById('gridProductos');
+      const empty = document.getElementById('emptyCatalog');
+
+      if (filtrados.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      grid.innerHTML = filtrados.map(p => `
+        <div onclick="openProductSheet(${p.id})" class="bg-[#141721] border border-white/10 rounded-2xl overflow-hidden flex flex-col justify-between cursor-pointer group hover:border-white/20 transition">
+          <div class="aspect-square w-full bg-black/40 overflow-hidden relative">
+            <img src="${p.imagenes[0]}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+            ${p.imagenes.length > 1 ? `<span class="absolute bottom-2 right-2 bg-black/75 text-[9px] px-1.5 py-0.5 rounded text-slate-300 font-medium"><i class="fa-solid fa-images mr-1"></i>${p.imagenes.length}</span>` : ''}
+          </div>
+          <div class="p-3">
+            <h4 class="font-semibold text-xs leading-snug line-clamp-1">${p.nombre}</h4>
+            
+            ${p.colores && p.colores.length > 0 ? `
+              <div class="flex items-center gap-1.5 my-2">
+                ${p.colores.map(col => `
+                  <span class="w-3.5 h-3.5 rounded-full border border-white/30 shadow-xs" 
+                        style="background-color: ${obtenerHexColor(col)};" 
+                        title="${col}"></span>
+                `).join('')}
+                <span class="text-[9px] text-slate-400 ml-1 truncate">${p.colores.join(', ')}</span>
+              </div>
+            ` : ''}
+
+            <div class="flex items-center justify-between mt-1">
+              <span class="font-bold text-xs">$${Number(p.precio).toLocaleString('es-AR')}</span>
+              <span class="text-[9px] text-slate-400">Stock: ${p.stock}</span>
+            </div>
           </div>
         </div>
       `).join('');
     }
 
-    function filtrar(cat) {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
-      if(cat === 'todos') renderizar(productos);
-      else renderizar(productos.filter(p => p.categoria === cat));
+    function openProductSheet(id) {
+      const p = productos.find(x => x.id == id);
+      if (!p) return;
+
+      selectedTalle = p.talles && p.talles.length > 0 ? p.talles[0] : 'Único';
+      selectedColor = p.colores && p.colores.length > 0 ? p.colores[0] : 'Estándar';
+
+      const content = document.getElementById('sheetContent');
+      content.innerHTML = `
+        <div class="flex justify-between items-start mb-3">
+          <div>
+            <span class="text-[9px] text-slate-400 uppercase tracking-widest">${p.categoria}</span>
+            <h3 class="font-bold text-base">${p.nombre}</h3>
+            <p class="font-black text-lg mt-0.5">$${Number(p.precio).toLocaleString('es-AR')}</p>
+          </div>
+          <button onclick="closeSheet()" class="p-1 text-slate-400"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+
+        <div class="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-none snap-x">
+          ${p.imagenes.map(img => `
+            <div class="shrink-0 w-64 aspect-square rounded-xl overflow-hidden bg-black/40 snap-center border border-white/10">
+              <img src="${img}" class="w-full h-full object-cover">
+            </div>
+          `).join('')}
+        </div>
+
+        ${p.colores && p.colores.length > 0 ? `
+          <div class="mb-3">
+            <span class="text-[10px] text-slate-400 block mb-1.5 uppercase font-bold">Color</span>
+            <div class="flex gap-2 flex-wrap">
+              ${p.colores.map(c => `
+                <button onclick="selectColor('${c}', this)" class="color-btn flex items-center gap-2 text-xs px-3 py-1.5 rounded-lg border ${c === selectedColor ? 'border-white bg-white text-black font-bold' : 'border-white/10 bg-[#090a0f] text-slate-300'}">
+                  <span class="w-3 h-3 rounded-full border border-black/20" style="background-color: ${obtenerHexColor(c)};"></span>
+                  <span>${c}</span>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        ${p.talles && p.talles.length > 0 ? `
+          <div class="mb-4">
+            <span class="text-[10px] text-slate-400 block mb-1.5 uppercase font-bold">Talle</span>
+            <div class="flex gap-2 flex-wrap">
+              ${p.talles.map(t => `
+                <button onclick="selectTalle('${t}', this)" class="talle-btn text-xs px-3 py-1.5 rounded-lg border ${t === selectedTalle ? 'border-white bg-white text-black font-bold' : 'border-white/10 bg-[#090a0f] text-slate-300'}">
+                  ${t}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        <button onclick="addToCart(${p.id})" class="w-full py-3 bg-white text-black font-bold text-xs rounded-xl hover:bg-slate-200 transition">
+          Agregar al Pedido
+        </button>
+      `;
+
+      document.getElementById('sheetBackdrop').classList.remove('hidden');
+      document.getElementById('productSheet').classList.remove('hidden');
     }
 
-    // 3. CARRITO Y CHECKOUT DIRECTO
-    function agregarAlCarrito(id) {
-      const item = productos.find(p => p.id === id);
-      if (item) {
-        carrito.push(item);
-        document.getElementById('cartCount').innerText = carrito.length;
-        abrirCarrito();
+    function selectColor(col, btn) {
+      selectedColor = col;
+      document.querySelectorAll('.color-btn').forEach(b => b.className = "color-btn flex items-center gap-2 text-xs px-3 py-1.5 rounded-lg border border-white/10 bg-[#090a0f] text-slate-300");
+      btn.className = "color-btn flex items-center gap-2 text-xs px-3 py-1.5 rounded-lg border border-white bg-white text-black font-bold";
+    }
+
+    function selectTalle(tal, btn) {
+      selectedTalle = tal;
+      document.querySelectorAll('.talle-btn').forEach(b => b.className = "talle-btn text-xs px-3 py-1.5 rounded-lg border border-white/10 bg-[#090a0f] text-slate-300");
+      btn.className = "talle-btn text-xs px-3 py-1.5 rounded-lg border border-white bg-white text-black font-bold";
+    }
+
+    function closeSheet() {
+      document.getElementById('sheetBackdrop').classList.add('hidden');
+      document.getElementById('productSheet').classList.add('hidden');
+    }
+
+    function addToCart(id) {
+      const p = productos.find(x => x.id == id);
+      carrito.push({ ...p, talleElegido: selectedTalle, colorElegido: selectedColor });
+      closeSheet();
+      actualizarResumen();
+      toggleCart();
+    }
+
+    function toggleCart() {
+      const b = document.getElementById('cartBackdrop');
+      const s = document.getElementById('cartSheet');
+      if (s.classList.contains('hidden')) {
+        actualizarResumen();
+        b.classList.remove('hidden');
+        s.classList.remove('hidden');
+      } else {
+        b.classList.add('hidden');
+        s.classList.add('hidden');
       }
     }
 
-    function abrirCarrito() {
-      const list = document.getElementById('cartItems');
-      let total = 0;
-      list.innerHTML = carrito.map((c, i) => {
-        total += c.precio;
-        return `<div style="display:flex; justify-content:space-between; align-items:center; background:#181b26; padding:10px; border-radius:10px;">
-          <span>${c.nombre}</span>
-          <span style="font-weight:900;">$${c.precio.toLocaleString('es-AR')}</span>
-        </div>`;
-      }).join('');
-      document.getElementById('cartTotal').innerText = `$${total.toLocaleString('es-AR')}`;
-      document.getElementById('cartDrawer').classList.add('open');
+    function actualizarResumen() {
+      const list = document.getElementById('cartItemsList');
+      const count = document.getElementById('cartCount');
+      if (carrito.length > 0) {
+        count.innerText = carrito.length;
+        count.classList.remove('hidden');
+      } else {
+        count.classList.add('hidden');
+      }
+
+      if (carrito.length === 0) {
+        list.innerHTML = '<p class="text-xs text-slate-500 text-center py-4">Bolsa vacía.</p>';
+        document.getElementById('cartTotalDisplay').innerText = '$0';
+        return;
+      }
+
+      let subtotal = carrito.reduce((acc, item) => acc + Number(item.precio), 0);
+      const total = document.getElementById('orderPago').value === 'transferencia' ? subtotal * 0.9 : subtotal;
+
+      list.innerHTML = carrito.map((item, idx) => `
+        <div class="flex items-center justify-between p-2.5 bg-[#090a0f] border border-white/10 rounded-xl text-xs">
+          <div>
+            <p class="font-bold">${item.nombre}</p>
+            <p class="text-[10px] text-slate-400">${item.talleElegido} / ${item.colorElegido} • $${Number(item.precio).toLocaleString('es-AR')}</p>
+          </div>
+          <button onclick="carrito.splice(${idx},1); actualizarResumen();" class="text-slate-500 hover:text-red-400 p-1"><i class="fa-solid fa-trash text-xs"></i></button>
+        </div>
+      `).join('');
+
+      document.getElementById('cartTotalDisplay').innerText = `$${Math.round(total).toLocaleString('es-AR')}`;
     }
 
-    function cerrarCarrito() {
-      document.getElementById('cartDrawer').classList.remove('open');
-    }
+    function enviarPedidoWhatsApp() {
+      if (carrito.length === 0) return alert('La bolsa está vacía.');
+      const nom = document.getElementById('orderNombre').value.trim();
+      const dir = document.getElementById('orderDireccion').value.trim();
+      if (!nom) return alert('Por favor ingresá tu nombre.');
 
-    function enviarWhatsApp() {
-      const nom = document.getElementById('custNombre').value.trim();
-      const dir = document.getElementById('custDireccion').value.trim();
-      if (!nom || !dir) return alert('Por favor completá tu nombre y dirección.');
-      if (carrito.length === 0) return alert('El carrito está vacío.');
-
-      let total = 0;
-      let msg = `*MOKA MOTION - PEDIDO*\nCliente: ${nom}\nDestino: ${dir}\n\n`;
+      let total = document.getElementById('cartTotalDisplay').innerText;
+      let msg = `*MOKA MOTION - PEDIDO*%0ACliente: ${nom}%0ADestino: ${dir || 'A coordinar'}%0A%0A`;
       carrito.forEach(c => {
-        msg += `• ${c.nombre} ($${c.precio.toLocaleString('es-AR')})\n`;
-        total += c.precio;
+        msg += `• ${c.nombre} [Talle: ${c.talleElegido} | Color: ${c.colorElegido}]%0A`;
       });
-      msg += `\n*TOTAL: $${total.toLocaleString('es-AR')}*`;
-
-      window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
+      msg += `%0A*TOTAL: ${total}*`;
+      window.open(`https://wa.me/5491123456789?text=${msg}`, '_blank');
     }
 
-    cargarStories();
-    cargarCatalogo();
+    async function cargarStories() {
+      const container = document.getElementById('storiesContainer');
+      let stories = [
+        { titulo: "Drop '26", imagen: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=200&q=80" },
+        { titulo: "Calzado", imagen: "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=200&q=80" }
+      ];
+      try {
+        const { data } = await db.from('historias').select('*').eq('activo', true);
+        if (data && data.length > 0) stories = data;
+      } catch (e) {}
+
+      container.innerHTML = stories.map(s => `
+        <div class="flex flex-col items-center gap-1 shrink-0 cursor-pointer">
+          <div class="w-14 h-14 rounded-full p-[2px] bg-gradient-to-tr from-white/40 via-white/80 to-slate-400">
+            <img src="${s.imagen}" class="w-full h-full object-cover rounded-full">
+          </div>
+          <span class="text-[9px] text-slate-300 truncate max-w-[60px]">${s.titulo}</span>
+        </div>
+      `).join('');
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
