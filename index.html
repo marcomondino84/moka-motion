@@ -3,66 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>MOKA MOTION</title>
+  <title>MOKA MOTION — Tienda Oficial</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
   <style>
     :root {
-      --bg: #0b0d13;
-      --glass-card: rgba(255, 255, 255, 0.05);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --accent-warm: #d97746;
+      --bg-dark: #07090e;
+      --bg-surface: rgba(18, 24, 38, 0.7);
+      --glass-card: rgba(255, 255, 255, 0.04);
+      --glass-card-hover: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.09);
+      --glass-border-focus: rgba(255, 255, 255, 0.25);
+      --accent-warm: #e07246;
+      --accent-warm-glow: rgba(224, 114, 70, 0.35);
+      --accent-teal: #2dd4bf;
       --text: #ffffff;
-      --text-dim: #9aa1b2;
-      --text-sub: #6c7385;
+      --text-dim: #94a3b8;
+      --text-muted: #64748b;
+      --danger: #ef4444;
+      --radius-sm: 12px;
+      --radius-md: 18px;
+      --radius-lg: 24px;
+      --radius-full: 9999px;
+      --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
 
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* FONDO ATMOSFÉRICO CINEMÁTICO INSPIRADO EN FASHORA */
     body {
-      background-color: var(--bg);
-      background-image:
-        radial-gradient(ellipse 70% 50% at 90% 0%, rgba(217, 119, 70, 0.28) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 0% 20%, rgba(36, 82, 102, 0.35) 0%, transparent 60%),
-        radial-gradient(circle at 50% 90%, rgba(18, 22, 32, 0.9) 0%, #08090d 100%);
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle 500px at 15% 10%, rgba(26, 68, 86, 0.38) 0%, transparent 70%),
+        radial-gradient(circle 450px at 85% 25%, rgba(199, 93, 49, 0.28) 0%, transparent 70%),
+        radial-gradient(circle 600px at 50% 65%, rgba(17, 33, 48, 0.25) 0%, transparent 80%),
+        radial-gradient(circle 500px at 80% 90%, rgba(184, 80, 40, 0.2) 0%, transparent 70%),
+        linear-gradient(180deg, #07090e 0%, #0a0d14 100%);
       background-attachment: fixed;
       color: var(--text);
       display: flex;
       justify-content: center;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
+    /* CONTENEDOR PRINCIPAL TIPO APP MÓVIL */
     .app-frame {
       width: 100%;
       max-width: 440px;
       min-height: 100vh;
       position: relative;
-      padding-bottom: 100px;
+      padding-bottom: 110px;
       display: flex;
       flex-direction: column;
-      backdrop-filter: blur(12px);
-      border-left: 1px solid var(--glass-border);
-      border-right: 1px solid var(--glass-border);
+      border-left: 1px solid rgba(255, 255, 255, 0.05);
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 70px rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(14px);
     }
 
-    /* HEADER CON TU LOGO REAL */
+    /* HEADER SUPERIOR CON LOGO Y ACCIONES */
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 20px 10px;
+      padding: 18px 20px 12px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(7, 9, 14, 0.75);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     }
     .brand-logo-img {
       height: 28px;
       width: auto;
       object-fit: contain;
+      filter: drop-shadow(0 2px 8px rgba(255,255,255,0.15));
     }
-    .top-actions { display: flex; align-items: center; gap: 10px; }
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
     .icon-circle-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-full);
       background: var(--glass-card);
       border: 1px solid var(--glass-border);
       display: flex;
@@ -71,161 +108,315 @@
       color: var(--text);
       cursor: pointer;
       text-decoration: none;
-      transition: background 0.2s;
+      transition: all 0.25s ease;
+      position: relative;
+      font-size: 0.95rem;
     }
-    .icon-circle-btn:hover { background: rgba(255, 255, 255, 0.12); }
+    .icon-circle-btn:hover, .icon-circle-btn:active {
+      background: var(--glass-card-hover);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
 
-    /* STORIES */
+    /* STORIES HORIZONTALES CON AURA DE COLOR */
     .stories-row {
       display: flex;
       gap: 14px;
       overflow-x: auto;
-      padding: 10px 20px 18px;
+      padding: 14px 20px 18px;
       scrollbar-width: none;
     }
     .stories-row::-webkit-scrollbar { display: none; }
-    .story-unit { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; flex-shrink: 0; }
+    
+    .story-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+    .story-unit:active { transform: scale(0.95); }
+    
     .story-avatar-wrap {
-      width: 62px;
-      height: 62px;
-      border-radius: 50%;
+      width: 64px;
+      height: 64px;
+      border-radius: var(--radius-full);
       padding: 2.5px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.4), var(--glass-border));
+      background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.06) 100%);
       position: relative;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
     }
     .story-avatar-wrap.highlight {
-      background: linear-gradient(135deg, #10b981, #06b6d4);
+      background: linear-gradient(135deg, #e07246 0%, #ff9f68 50%, #2dd4bf 100%);
+      box-shadow: 0 4px 16px var(--accent-warm-glow);
     }
     .story-avatar-wrap img {
       width: 100%;
       height: 100%;
-      border-radius: 50%;
+      border-radius: var(--radius-full);
       object-fit: cover;
-      background: #181c26;
-      border: 2px solid #0f1218;
+      background: #11141e;
+      border: 2px solid #090b10;
     }
     .story-add-badge {
       position: absolute;
       bottom: 0;
       right: 0;
-      background: #fff;
+      background: #ffffff;
       color: #000;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      border-radius: var(--radius-full);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       font-weight: 900;
-      border: 2px solid #0f1218;
+      border: 2px solid #090b10;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
     }
-    .story-name { font-size: 0.7rem; color: var(--text-dim); font-weight: 500; max-width: 62px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .story-name {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      font-weight: 600;
+      max-width: 66px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: center;
+    }
 
-    /* CATEGORÍAS */
+    /* ENCABEZADOS DE SECCIÓN */
     .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 6px 20px 12px;
+      padding: 10px 20px 12px;
     }
-    .section-heading { font-size: 1.05rem; font-weight: 700; color: #fff; }
-    .section-link { font-size: 0.75rem; color: var(--text-sub); text-decoration: none; font-weight: 600; cursor: pointer; }
+    .section-heading {
+      font-size: 1.12rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: #ffffff;
+    }
+    .section-link {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 700;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .section-link:hover { color: #fff; }
 
+    /* CATEGORÍAS */
     .categories-scroller {
       display: flex;
       gap: 12px;
       overflow-x: auto;
-      padding: 0 20px 18px;
+      padding: 0 20px 20px;
       scrollbar-width: none;
     }
     .categories-scroller::-webkit-scrollbar { display: none; }
+    
     .category-box {
-      width: 68px;
-      height: 72px;
+      width: 72px;
+      height: 76px;
       flex-shrink: 0;
       background: var(--glass-card);
       border: 1px solid var(--glass-border);
-      border-radius: 16px;
+      border-radius: var(--radius-md);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 6px;
       cursor: pointer;
-      backdrop-filter: blur(10px);
-      transition: all 0.2s;
+      backdrop-filter: blur(12px);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .category-box:hover, .category-box:active {
+      transform: translateY(-2px);
+      background: var(--glass-card-hover);
+      border-color: rgba(255, 255, 255, 0.2);
     }
     .category-box.active {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.35);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.5);
     }
-    .category-box span.emoji { font-size: 1.25rem; }
-    .category-title { font-size: 0.65rem; color: var(--text-dim); font-weight: 600; text-align: center; text-transform: capitalize; }
+    .category-box span.emoji {
+      font-size: 1.35rem;
+    }
+    .category-title {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      font-weight: 700;
+      text-align: center;
+      text-transform: capitalize;
+    }
+    .category-box.active .category-title {
+      color: #fff;
+    }
 
-    /* BANNER DINÁMICO */
-    .hero-card-wrap { padding: 0 20px 22px; }
-    .hero-card {
-      border-radius: 24px;
+    /* CARRUSEL DE BANNERS DE OFERTAS ESTILO FASHORA */
+    .hero-slider-section {
+      padding: 0 20px 24px;
+      position: relative;
+    }
+    .hero-slider-wrap {
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      position: relative;
+    }
+    .hero-slides-track {
+      display: flex;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      width: 100%;
+    }
+    .hero-slide {
+      min-width: 100%;
+      border-radius: var(--radius-lg);
       overflow: hidden;
       position: relative;
-      background: linear-gradient(135deg, rgba(28, 64, 80, 0.8) 0%, rgba(184, 88, 52, 0.75) 100%);
-      border: 1px solid rgba(255,255,255,0.12);
-      min-height: 160px;
+      background: linear-gradient(125deg, rgba(22, 53, 68, 0.88) 0%, rgba(15, 28, 38, 0.95) 45%, rgba(184, 88, 52, 0.85) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      min-height: 175px;
       display: flex;
       align-items: center;
-      padding: 20px;
+      padding: 22px 20px;
       cursor: pointer;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5);
+      user-select: none;
     }
-    .hero-content { z-index: 2; max-width: 65%; display: flex; flex-direction: column; gap: 6px; }
-    .hero-label { font-size: 0.7rem; color: rgba(255,255,255,0.75); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-    .hero-title { font-size: 1.25rem; font-weight: 900; line-height: 1.15; color: #fff; }
+    .hero-content {
+      z-index: 2;
+      max-width: 62%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .hero-tag-pill {
+      font-size: 0.65rem;
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .hero-tag-pill i { color: #f97316; font-size: 0.75rem; }
+    .hero-title {
+      font-size: 1.25rem;
+      font-weight: 900;
+      line-height: 1.18;
+      color: #ffffff;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .hero-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 2px;
+    }
+    .hero-price-val {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #fff;
+    }
     .hero-btn {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      color: #fff;
-      font-size: 0.75rem;
+      gap: 8px;
+      color: #ffffff;
+      font-size: 0.76rem;
       font-weight: 800;
-      margin-top: 6px;
-      background: none;
-      border: none;
+      margin-top: 8px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      padding: 7px 14px;
+      border-radius: var(--radius-full);
+      backdrop-filter: blur(10px);
+      width: fit-content;
+      transition: all 0.2s;
+    }
+    .hero-btn:hover {
+      background: rgba(255, 255, 255, 0.26);
+      transform: translateX(2px);
     }
     .hero-image-bg {
       position: absolute;
       right: 0;
       bottom: 0;
       height: 100%;
-      width: 45%;
+      width: 48%;
       object-fit: cover;
-      object-position: top;
-      mask-image: linear-gradient(to left, rgba(0,0,0,1) 60%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 60%, transparent 100%);
+      object-position: center top;
+      mask-image: linear-gradient(to left, rgba(0,0,0,1) 50%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 50%, transparent 100%);
+      pointer-events: none;
+    }
+    
+    /* Indicadores del Carrusel de Ofertas */
+    .hero-dots-wrap {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .hero-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .hero-dot.active {
+      width: 20px;
+      background: #ffffff;
+      box-shadow: 0 0 10px rgba(255,255,255,0.6);
     }
 
-    /* PRODUCTOS */
+    /* GRID DE PRODUCTOS ESTILO FASHORA */
     .products-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 14px;
-      padding: 0 20px;
+      padding: 0 20px 20px;
     }
     .product-tile {
       background: var(--glass-card);
       border: 1px solid var(--glass-border);
-      border-radius: 20px;
+      border-radius: var(--radius-md);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       cursor: pointer;
       position: relative;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(12px);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .product-tile:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255, 255, 255, 0.22);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+      background: var(--glass-card-hover);
     }
     .tile-img-box {
       width: 100%;
       padding-top: 125%;
       position: relative;
       background: #0d1017;
+      overflow: hidden;
     }
     .tile-img-box img {
       position: absolute;
@@ -233,230 +424,753 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .product-tile:hover .tile-img-box img {
+      transform: scale(1.04);
     }
     .tag-sale {
       position: absolute;
       top: 10px;
       left: 10px;
-      background: #ef4444;
-      color: #fff;
-      font-size: 0.6rem;
+      background: var(--danger);
+      color: #ffffff;
+      font-size: 0.62rem;
       font-weight: 900;
-      padding: 3px 6px;
+      padding: 3px 7px;
       border-radius: 6px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
     }
-    .tile-info { padding: 12px; display: flex; flex-direction: column; gap: 4px; }
-    .tile-name { font-size: 0.82rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .tile-price { font-size: 0.95rem; font-weight: 900; color: #fff; }
+    .fav-heart-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background: rgba(14, 18, 27, 0.65);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      transition: all 0.2s ease;
+    }
+    .fav-heart-btn.active {
+      color: #ef4444;
+      background: rgba(255, 255, 255, 0.9);
+      border-color: #ef4444;
+    }
 
-    /* DOCK NAVBAR */
+    .tile-info {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .tile-name {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tile-price {
+      font-size: 0.98rem;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    /* FILA DE COLORES Y ETIQUETAS EN CADA PUBLICACIÓN */
+    .tile-colors-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+    .tile-color-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: var(--radius-full);
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+      flex-shrink: 0;
+    }
+    .tile-color-badge {
+      font-size: 0.62rem;
+      color: var(--text-dim);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 1px 6px;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* SECCIÓN TIENDA / CATALOGO DEDICADO */
+    .shop-view-container {
+      display: none;
+      flex-direction: column;
+      animation: fadeIn 0.25s ease forwards;
+    }
+    .shop-view-container.active {
+      display: flex;
+    }
+    .home-view-container {
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn 0.25s ease forwards;
+    }
+    .home-view-container.hidden {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .shop-header-wrap {
+      padding: 10px 20px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .shop-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .shop-search-bar {
+      width: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .shop-search-bar input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: 12px 16px 12px 42px;
+      color: #fff;
+      font-size: 0.88rem;
+      outline: none;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(12px);
+    }
+    .shop-search-bar input:focus {
+      border-color: rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
+    }
+    .shop-search-bar i {
+      position: absolute;
+      left: 15px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+    .shop-filters-pills {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 2px 20px 16px;
+      scrollbar-width: none;
+    }
+    .shop-filters-pills::-webkit-scrollbar { display: none; }
+    .shop-pill {
+      background: var(--glass-card);
+      border: 1px solid var(--glass-border);
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .shop-pill.active {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+    }
+
+    /* DOCK NAVBAR FLOTANTE ESTILO ISLA VIDRIO */
     .bottom-dock {
       position: fixed;
-      bottom: 16px;
+      bottom: 18px;
       left: 50%;
       transform: translateX(-50%);
       width: calc(100% - 36px);
       max-width: 404px;
-      background: rgba(18, 22, 31, 0.85);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
-      border-radius: 32px;
+      background: rgba(14, 18, 27, 0.82);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 36px;
       display: flex;
       justify-content: space-around;
       align-items: center;
-      padding: 10px 16px;
+      padding: 10px 14px;
       z-index: 50;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
     }
     .dock-link {
       background: none;
       border: none;
-      color: var(--text-sub);
+      color: var(--text-muted);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
-      font-size: 0.65rem;
+      gap: 4px;
+      font-size: 0.68rem;
       font-weight: 700;
       cursor: pointer;
       position: relative;
       text-decoration: none;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
     }
-    .dock-link i { font-size: 1.15rem; }
-    .dock-link.active { color: #fff; }
+    .dock-link i { font-size: 1.15rem; transition: transform 0.2s; }
+    .dock-link:hover i { transform: translateY(-2px); }
+    .dock-link.active {
+      color: #ffffff;
+    }
+    .dock-link.active i {
+      color: var(--accent-warm);
+      filter: drop-shadow(0 0 8px var(--accent-warm-glow));
+    }
     .dock-badge {
       position: absolute;
-      top: -4px;
-      right: -4px;
+      top: 0px;
+      right: 6px;
       background: var(--accent-warm);
       color: #fff;
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       font-weight: 900;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
+      width: 17px;
+      height: 17px;
+      border-radius: var(--radius-full);
       display: flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
     }
 
-    /* POPUP MANUAL PERSISTENTE */
-    .modal-backdrop {
+    /* MODAL DE DETALLE DE PRENDA COMPLETO (ESTILO FASHORA) */
+    .product-modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(14px);
+      z-index: 95;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      animation: fadeIn 0.25s ease;
+    }
+    .product-modal-backdrop.open { display: flex; }
+    
+    .product-modal-card {
+      background: #0f131d;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      width: 100%;
+      max-width: 440px;
+      border-radius: 30px 30px 0 0;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px 20px 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      position: relative;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+      scrollbar-width: none;
+    }
+    .product-modal-card::-webkit-scrollbar { display: none; }
+
+    .modal-grab-bar {
+      width: 40px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-full);
+      margin: -10px auto 4px;
+    }
+    .modal-top-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-close-round {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--glass-border);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    
+    /* Galería de fotos en el detalle */
+    .detail-gallery-box {
+      width: 100%;
+      height: 340px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      position: relative;
+      background: #090b10;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .detail-gallery-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.3s ease;
+    }
+    .detail-gallery-thumbs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      margin-top: -6px;
+      padding-bottom: 4px;
+    }
+    .detail-thumb {
+      width: 54px;
+      height: 54px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      cursor: pointer;
+      border: 2px solid transparent;
+      opacity: 0.6;
+      transition: all 0.2s;
+    }
+    .detail-thumb.active {
+      border-color: #ffffff;
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .detail-header-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .detail-title {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.2;
+    }
+    .detail-category {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .detail-price {
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: var(--accent-warm);
+      white-space: nowrap;
+    }
+
+    .selector-block-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .selector-selected-val {
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    /* Swatches interactivos en Detalle */
+    .color-swatches-grid {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .color-swatch-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: var(--glass-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .color-swatch-item.active {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #ffffff;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+    }
+    .color-circle-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+    .color-swatch-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    /* Talles interactivos */
+    .talles-grid {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .talle-pill {
+      min-width: 44px;
+      padding: 8px 14px;
+      background: var(--glass-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.82rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .talle-pill.active {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+    }
+
+    /* Botones de compra */
+    .detail-actions-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .btn-add-cart {
+      flex: 1;
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      padding: 15px;
+      border-radius: var(--radius-md);
+      font-weight: 900;
+      font-size: 0.88rem;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(255,255,255,0.25);
+    }
+    .btn-add-cart:active { transform: scale(0.98); }
+    
+    .btn-wa-direct {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      background: rgba(37, 211, 102, 0.18);
+      border: 1px solid rgba(37, 211, 102, 0.35);
+      color: #25d366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-wa-direct:hover { background: rgba(37, 211, 102, 0.3); }
+
+    /* POPUP SWIPEABLE SLIDER (VER DE A UNO LOS POPUPS ACTIVOS) */
+    .popup-slider-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(16px);
       z-index: 100;
       display: none;
       align-items: center;
       justify-content: center;
       padding: 20px;
     }
-    .modal-backdrop.open { display: flex; }
-    .modal-box {
-      background: #131722;
-      border: 1px solid var(--glass-border);
-      border-radius: 26px;
+    .popup-slider-backdrop.open { display: flex; }
+    
+    .popup-modal-card {
+      background: #111420;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 28px;
       width: 100%;
       max-width: 380px;
       overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.85);
       display: flex;
       flex-direction: column;
-      position: relative;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      user-select: none;
+      touch-action: pan-y;
     }
-    .modal-close-ico {
+    
+    /* Barras de progreso superiores estilo Stories */
+    .popup-progress-bars {
       position: absolute;
-      top: 14px;
+      top: 12px;
+      left: 14px;
       right: 14px;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.2);
+      display: flex;
+      gap: 5px;
+      z-index: 20;
+    }
+    .popup-bar-item {
+      height: 3px;
+      flex: 1;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .popup-bar-item.active {
+      background: #ffffff;
+      box-shadow: 0 0 8px rgba(255,255,255,0.7);
+    }
+    
+    .popup-close-btn {
+      position: absolute;
+      top: 24px;
+      right: 14px;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      z-index: 10;
+      z-index: 20;
+      font-size: 1rem;
     }
-    .modal-img-wrap { width: 100%; height: 320px; background: #08090d; }
-    .modal-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-    .modal-body { padding: 18px; display: flex; flex-direction: column; gap: 8px; }
-    .modal-title { font-size: 1.1rem; font-weight: 800; }
 
-    /* DETALLE PRENDA Y CHECKOUT */
-    .drawer-overlay {
+    .popup-slide-img-box {
+      width: 100%;
+      height: 340px;
+      background: #08090d;
+      position: relative;
+    }
+    .popup-slide-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .popup-body-content {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .popup-body-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .popup-nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+    }
+    .popup-counter-tag {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      font-weight: 700;
+    }
+    .popup-nav-arrows {
+      display: flex;
+      gap: 8px;
+    }
+    .popup-arrow-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-full);
+      background: var(--glass-card);
+      border: 1px solid var(--glass-border);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    /* DRAWER CARRITO Y CHECKOUT */
+    .cart-drawer-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(8px);
-      z-index: 90;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(12px);
+      z-index: 92;
       display: none;
       align-items: flex-end;
+      justify-content: center;
     }
-    .drawer-overlay.open { display: flex; }
-    .drawer-card {
-      background: #141824;
+    .cart-drawer-backdrop.open { display: flex; }
+    
+    .cart-drawer-card {
+      background: #111520;
       width: 100%;
       max-width: 440px;
-      margin: 0 auto;
-      border-radius: 26px 26px 0 0;
-      padding: 24px 20px;
+      border-radius: 28px 28px 0 0;
+      padding: 24px 20px 30px;
       border-top: 1px solid var(--glass-border);
       max-height: 85vh;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 14px;
-    }
-    .chip-selector-title { font-size: 0.7rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; }
-    .chip-list { display: flex; gap: 8px; flex-wrap: wrap; }
-    .filter-chip-opt {
-      background: var(--glass-card);
-      border: 1px solid var(--glass-border);
-      padding: 8px 14px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: #fff;
-      cursor: pointer;
-    }
-    .filter-chip-opt.active { background: #fff; color: #000; border-color: #fff; }
-    
-    .btn-action-solid {
-      background: #fff;
-      color: #000;
-      border: none;
-      padding: 14px;
-      border-radius: 16px;
-      font-weight: 800;
-      font-size: 0.85rem;
-      cursor: pointer;
-      text-transform: uppercase;
-      width: 100%;
-      margin-top: 6px;
+      gap: 16px;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.75);
     }
     .input-flat {
       width: 100%;
-      background: #0d1017;
+      background: #090b10;
       border: 1px solid var(--glass-border);
       color: #fff;
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-size: 0.85rem;
+      padding: 13px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.86rem;
+      outline: none;
+    }
+    .input-flat:focus { border-color: rgba(255, 255, 255, 0.35); }
+
+    /* TOAST NOTIFICACIÓN SUTIL */
+    .toast-msg {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50px);
+      background: rgba(18, 24, 38, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(14px);
+      color: #ffffff;
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      font-weight: 700;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
     }
   </style>
 </head>
 <body>
 
+  <!-- CONTENEDOR APP -->
   <div class="app-frame">
-    <!-- HEADER -->
-    <div class="top-bar">
-      <img src="logo.png" alt="Moka Motion" class="brand-logo-img">
+
+    <!-- HEADER FLOTANTE -->
+    <header class="top-bar">
+      <img src="logo.png" alt="Moka Motion" class="brand-logo-img" onclick="mostrarVista('home')">
       <div class="top-actions">
-        <a href="admin.html" class="icon-circle-btn" title="Panel de Control"><i class="fa-solid fa-gear"></i></a>
-        <button class="icon-circle-btn" onclick="abrirDrawerCarrito()"><i class="fa-solid fa-bag-shopping"></i></button>
+        <button class="icon-circle-btn" onclick="toggleBuscadorTienda()" title="Buscar"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <a href="admin.html" class="icon-circle-btn" title="Panel de Control"><i class="fa-solid fa-sliders"></i></a>
+        <button class="icon-circle-btn" onclick="abrirDrawerCarrito()" title="Carrito">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="dock-badge" id="headerCartCount" style="top:-3px; right:-3px;">0</span>
+        </button>
       </div>
-    </div>
+    </header>
 
-    <!-- STORIES -->
-    <div class="stories-row" id="storiesContainer"></div>
+    <!-- VISTA INICIO (HOME) -->
+    <main id="viewHome" class="home-view-container">
+      
+      <!-- STORIES / DROPS ROW -->
+      <div class="stories-row" id="storiesContainer"></div>
 
-    <!-- CATEGORÍAS -->
-    <div class="section-header">
-      <h2 class="section-heading">Categorías</h2>
-      <span class="section-link" onclick="filtrarCat('todos')">Ver todas</span>
-    </div>
-    <div class="categories-scroller" id="categoriesContainer"></div>
+      <!-- CATEGORÍAS HORIZONTALES -->
+      <div class="section-header">
+        <h2 class="section-heading">Categorías</h2>
+        <span class="section-link" onclick="abrirTiendaConFiltro('todos')">Ver todas</span>
+      </div>
+      <div class="categories-scroller" id="categoriesContainer"></div>
 
-    <!-- BANNER DINÁMICO (TOMA TU PRODUCTO O DROP DESTACADO) -->
-    <div class="hero-card-wrap">
-      <div class="hero-card" id="heroCardBanner" onclick="clickBannerDestacado()">
-        <div class="hero-content">
-          <span class="hero-label" id="heroTag">Nueva Colección</span>
-          <h1 class="hero-title" id="heroTitle">MOKA MOTION</h1>
-          <div class="hero-btn">Ver producto <i class="fa-solid fa-arrow-right"></i></div>
+      <!-- BANNER DE OFERTAS: CARRUSEL DESLIZABLE ESTILO FASHORA -->
+      <section class="hero-slider-section">
+        <div class="hero-slider-wrap" id="heroSliderWrap">
+          <div class="hero-slides-track" id="heroSlidesTrack">
+            <!-- Cargado dinámicamente con todas las ofertas -->
+          </div>
         </div>
-        <img id="heroImage" src="" class="hero-image-bg" alt="Destacado">
+        <div class="hero-dots-wrap" id="heroDotsWrap"></div>
+      </section>
+
+      <!-- PRENDAS RECOMENDADAS -->
+      <div class="section-header">
+        <h2 class="section-heading">Prendas recomendadas</h2>
+        <span class="section-link" onclick="mostrarVista('shop')">Explorar</span>
       </div>
-    </div>
+      <div class="products-grid" id="productsGrid"></div>
 
-    <!-- RECOMENDADOS -->
-    <div class="section-header">
-      <h2 class="section-heading">Prendas recomendadas</h2>
-    </div>
-    <div class="products-grid" id="productsGrid"></div>
+    </main>
 
-    <!-- DOCK NAVBAR -->
+    <!-- VISTA TIENDA (SHOP DEDICADO ESTILO FASHORA) -->
+    <main id="viewShop" class="shop-view-container">
+      <div class="shop-header-wrap">
+        <div class="shop-title-row">
+          <h1 class="section-heading" style="font-size:1.4rem;">Tienda Moka</h1>
+          <span id="shopProductCount" style="font-size:0.75rem; color:var(--text-dim); font-weight:700;">0 prendas</span>
+        </div>
+        <div class="shop-search-bar">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="shopSearchInput" placeholder="Buscar por prenda, estilo o talle..." oninput="filtrarTienda()">
+        </div>
+      </div>
+
+      <!-- Filtros rápidos por Categoría en Tienda -->
+      <div class="shop-filters-pills" id="shopPillsContainer"></div>
+
+      <!-- Grid de Productos de la Tienda -->
+      <div class="products-grid" id="shopGrid"></div>
+    </main>
+
+    <!-- DOCK NAVBAR FLOTANTE ESTILO ISLA -->
     <nav class="bottom-dock">
-      <button class="dock-link active" onclick="filtrarCat('todos')">
+      <button class="dock-link active" id="dockBtnHome" onclick="mostrarVista('home')">
         <i class="fa-solid fa-house"></i>
         <span>Inicio</span>
       </button>
-      <button class="dock-link" onclick="filtrarCat('todos')">
-        <i class="fa-solid fa-bag-shopping"></i>
+      <button class="dock-link" id="dockBtnShop" onclick="mostrarVista('shop')">
+        <i class="fa-solid fa-store"></i>
         <span>Tienda</span>
       </button>
       <button class="dock-link" onclick="abrirDrawerCarrito()">
@@ -465,68 +1179,122 @@
         <div class="dock-badge" id="dockCartCount">0</div>
       </button>
       <a href="admin.html" class="dock-link">
-        <i class="fa-solid fa-user"></i>
+        <i class="fa-solid fa-user-gear"></i>
         <span>Admin</span>
       </a>
     </nav>
+
   </div>
 
-  <!-- POPUP MANUAL PERSISTENTE (SOLO SE CIERRA TOCANDO LA CRUZ) -->
-  <div class="modal-backdrop" id="staticPopupModal" onclick="if(event.target===this) cerrarModalPopup()">
-    <div class="modal-box">
-      <div class="modal-close-ico" onclick="cerrarModalPopup()"><i class="fa-solid fa-xmark"></i></div>
-      <div class="modal-img-wrap">
-        <img id="popupImg" src="" alt="Popup">
+  <!-- MODAL DETALLE DE PRODUCTO COMPLETO ESTILO FASHORA (NO ENVÍA DIRECTO AL CARRO) -->
+  <div class="product-modal-backdrop" id="productModal" onclick="if(event.target===this) cerrarDetalleProducto()">
+    <div class="product-modal-card">
+      <div class="modal-grab-bar"></div>
+      
+      <div class="modal-top-actions">
+        <div class="detail-category" id="pCatTag">CATEGORÍA</div>
+        <button class="modal-close-round" onclick="cerrarDetalleProducto()"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div class="modal-body">
-        <div class="modal-title" id="popupTitle">MOKA MOTION</div>
-        <button class="btn-action-solid" onclick="cerrarModalPopup()">ENTENDIDO</button>
+
+      <!-- Galería Principal con Miniaturas si hay varias fotos -->
+      <div class="detail-gallery-box">
+        <img id="pDetailMainImg" class="detail-gallery-img" src="" alt="Prenda">
+        <button id="pDetailFavBtn" class="fav-heart-btn" onclick="toggleFavoritoModal()"><i class="fa-regular fa-heart"></i></button>
+      </div>
+      <div class="detail-gallery-thumbs" id="pDetailThumbsRow"></div>
+
+      <div class="detail-header-info">
+        <h2 class="detail-title" id="pDetailName">Nombre de la Prenda</h2>
+        <div class="detail-price" id="pDetailPrice">$0</div>
+      </div>
+
+      <!-- Selector de Colores Interactivos con Swatches Reales -->
+      <div id="coloresBlock">
+        <div class="selector-block-title">
+          <span>Color disponible</span>
+          <span class="selector-selected-val" id="colorNombreElegido">-</span>
+        </div>
+        <div class="color-swatches-grid" id="pDetailColoresGrid"></div>
+      </div>
+
+      <!-- Selector de Talles -->
+      <div id="tallesBlock">
+        <div class="selector-block-title">
+          <span>Seleccionar Talle</span>
+          <span class="selector-selected-val" id="talleNombreElegido">-</span>
+        </div>
+        <div class="talles-grid" id="pDetailTallesGrid"></div>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="detail-actions-row">
+        <button class="btn-add-cart" onclick="agregarAlCarritoDesdeDetalle()">
+          <i class="fa-solid fa-bag-shopping"></i> AGREGAR AL CARRITO
+        </button>
+        <button class="btn-wa-direct" onclick="comprarWhatsAppDirecto()" title="Comprar directo por WhatsApp">
+          <i class="fa-brands fa-whatsapp"></i>
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- DETALLE DEL PRODUCTO -->
-  <div class="drawer-overlay" id="productDrawer" onclick="if(event.target===this) cerrarDrawerProd()">
-    <div class="drawer-card">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 id="pDetailName" style="font-weight:800; font-size:1.1rem;">Prenda</h3>
-        <button onclick="cerrarDrawerProd()" style="background:none; border:none; color:var(--text-dim); font-size:1.2rem; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div id="pDetailPrice" style="font-size:1.25rem; font-weight:900; color:var(--accent-warm);">$0</div>
+  <!-- POPUP MODAL DESLIZABLE (SWIPEABLE: VER DE A UNO CON GESTOS O BOTONES) -->
+  <div class="popup-slider-backdrop" id="swipeablePopupModal" onclick="if(event.target===this) cerrarModalPopups()">
+    <div class="popup-modal-card" id="popupCardSwipeArea">
+      <!-- Barritas superiores de progreso estilo historias -->
+      <div class="popup-progress-bars" id="popupProgressBars"></div>
+      <button class="popup-close-btn" onclick="cerrarModalPopups()"><i class="fa-solid fa-xmark"></i></button>
 
-      <div id="tallesWrap">
-        <div class="chip-selector-title">Seleccionar Talle</div>
-        <div class="chip-list" id="pDetailTalles"></div>
+      <div class="popup-slide-img-box">
+        <img id="swipePopupImg" src="" alt="Popup Promo">
       </div>
 
-      <div id="coloresWrap">
-        <div class="chip-selector-title">Seleccionar Color</div>
-        <div class="chip-list" id="pDetailColores"></div>
+      <div class="popup-body-content">
+        <h3 class="popup-body-title" id="swipePopupTitle">MOKA MOTION</h3>
+        <button class="btn-add-cart" id="popupActionBtn" onclick="accionPopupActual()" style="padding:12px; margin-top:2px;">
+          VER AHORA <i class="fa-solid fa-arrow-right"></i>
+        </button>
+        <div class="popup-nav-row">
+          <span class="popup-counter-tag" id="popupCounterText">1 de 1</span>
+          <div class="popup-nav-arrows">
+            <button class="popup-arrow-btn" onclick="cambiarPopup(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="popup-arrow-btn" onclick="cambiarPopup(1)"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
       </div>
-
-      <button class="btn-action-solid" onclick="confirmarAlCarrito()">AGREGAR AL CARRITO</button>
     </div>
   </div>
 
   <!-- DRAWER CARRITO / CHECKOUT -->
-  <div class="drawer-overlay" id="cartDrawer" onclick="if(event.target===this) cerrarDrawerCarrito()">
-    <div class="drawer-card">
+  <div class="cart-drawer-backdrop" id="cartDrawer" onclick="if(event.target===this) cerrarDrawerCarrito()">
+    <div class="cart-drawer-card">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="font-weight:800;">TU PEDIDO</h3>
-        <button onclick="cerrarDrawerCarrito()" style="background:none; border:none; color:var(--text-dim); font-size:1.2rem; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+        <h3 style="font-weight:900; font-size:1.15rem; letter-spacing:0.5px;">TU PEDIDO</h3>
+        <button onclick="cerrarDrawerCarrito()" class="modal-close-round"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div id="cartItemsContainer" style="display:flex; flex-direction:column; gap:8px; max-height:180px; overflow-y:auto;"></div>
 
-      <input type="text" id="custName" class="input-flat" placeholder="Nombre completo">
-      <input type="text" id="custAddr" class="input-flat" placeholder="Dirección de entrega">
+      <div id="cartItemsContainer" style="display:flex; flex-direction:column; gap:10px; max-height:220px; overflow-y:auto;"></div>
 
-      <div style="display:flex; justify-content:space-between; font-size:1.1rem; font-weight:800; margin-top:4px;">
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <input type="text" id="custName" class="input-flat" placeholder="Nombre completo">
+        <input type="text" id="custAddr" class="input-flat" placeholder="Dirección de entrega y ciudad">
+      </div>
+
+      <div style="display:flex; justify-content:space-between; font-size:1.15rem; font-weight:900; padding:4px 2px;">
         <span>Total</span>
-        <span id="cartSumPrice">$0</span>
+        <span id="cartSumPrice" style="color:var(--accent-warm);">$0</span>
       </div>
 
-      <button class="btn-action-solid" onclick="checkoutWA()">FINALIZAR POR WHATSAPP</button>
+      <button class="btn-add-cart" onclick="checkoutWA()" style="background:#25d366; color:#000;">
+        <i class="fa-brands fa-whatsapp" style="font-size:1.1rem;"></i> FINALIZAR POR WHATSAPP
+      </button>
     </div>
+  </div>
+
+  <!-- TOAST FEEDBACK -->
+  <div id="toastMessage" class="toast-msg">
+    <i class="fa-solid fa-circle-check" style="color:#2dd4bf;"></i>
+    <span id="toastText">Prenda agregada al carrito</span>
   </div>
 
   <script>
@@ -535,28 +1303,134 @@
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     const TELEFONO_WA = '5493462325547';
 
-    let listaHistorias = [];
-    let listaProductos = [];
-    let carrito = [];
-    let prodActual = null;
-    let prodBannerId = null;
-    let talleElegido = '';
-    let colorElegido = '';
+    // MAPA DE COLORES HEX PARA LAS ETIQUETAS Y SWATCHES
+    const MAPA_COLORES = {
+      'negro': '#0d0e12',
+      'blanco': '#f8fafc',
+      'gris': '#64748b',
+      'beige': '#d2b48c',
+      'militar': '#4b5320',
+      'verde militar': '#4b5320',
+      'verde': '#16a34a',
+      'azul': '#1e3a8a',
+      'azul marino': '#0f172a',
+      'azul francia': '#2563eb',
+      'rojo': '#dc2626',
+      'bordo': '#581845',
+      'bordó': '#581845',
+      'vino': '#4c0519',
+      'marron': '#78350f',
+      'marrón': '#78350f',
+      'amarillo': '#eab308',
+      'naranja': '#ea580c',
+      'rosa': '#ec4899',
+      'lavanda': '#c084fc',
+      'violeta': '#7c3aed',
+      'dorado': '#d4af37',
+      'plata': '#94a3b8'
+    };
 
-    async function init() {
-      await Promise.all([cargarStories(), cargarCategorias(), cargarProductos()]);
-      verificarPopup();
+    function resolverHexColor(nombre) {
+      if (!nombre) return '#64748b';
+      const clean = nombre.trim().toLowerCase();
+      if (MAPA_COLORES[clean]) return MAPA_COLORES[clean];
+      
+      // Buscar en custom creados en admin
+      try {
+        const stored = localStorage.getItem('moka_colores_custom');
+        if (stored) {
+          const list = JSON.parse(stored);
+          const found = list.find(c => c.nombre && c.nombre.toLowerCase() === clean);
+          if (found && found.hex) return found.hex;
+        }
+      } catch (e) {}
+
+      // Generar tono sutil si es desconocido
+      let hash = 0;
+      for (let i = 0; i < clean.length; i++) hash = clean.charCodeAt(i) + ((hash << 5) - hash);
+      const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+      return '#' + '00000'.substring(0, 6 - c.length) + c;
     }
 
+    // ESTADO DE LA APLICACIÓN
+    let listaHistorias = [];
+    let listaProductos = [];
+    let listaCategorias = [];
+    let listaOfertas = [];
+    let listaPopupsActivos = [];
+    let popupActualIdx = 0;
+    
+    let carrito = [];
+    let favoritos = JSON.parse(localStorage.getItem('moka_favs') || '[]');
+
+    let prodEnDetalle = null;
+    let talleSeleccionado = '';
+    let colorSeleccionado = '';
+    let fotoSeleccionadaIdx = 0;
+
+    let heroSliderIndex = 0;
+    let heroSliderTimer = null;
+    let categoriaActivaTienda = 'todos';
+
+    // INICIALIZACIÓN
+    async function init() {
+      await Promise.all([cargarStories(), cargarCategorias(), cargarProductos()]);
+      verificarYPrepararPopups();
+      configurarGestosSwipe();
+    }
+
+    // NAVEGACIÓN ENTRE VISTAS (INICIO / TIENDA)
+    function mostrarVista(vista) {
+      const vHome = document.getElementById('viewHome');
+      const vShop = document.getElementById('viewShop');
+      const btnHome = document.getElementById('dockBtnHome');
+      const btnShop = document.getElementById('dockBtnShop');
+
+      if (vista === 'shop') {
+        vHome.classList.add('hidden');
+        vShop.classList.add('active');
+        btnHome.classList.remove('active');
+        btnShop.classList.add('active');
+        filtrarTienda();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        vShop.classList.remove('active');
+        vHome.classList.remove('hidden');
+        btnShop.classList.remove('active');
+        btnHome.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function toggleBuscadorTienda() {
+      mostrarVista('shop');
+      setTimeout(() => {
+        const inp = document.getElementById('shopSearchInput');
+        if (inp) inp.focus();
+      }, 150);
+    }
+
+    function abrirTiendaConFiltro(cat) {
+      categoriaActivaTienda = cat;
+      mostrarVista('shop');
+      renderPillsTienda();
+      filtrarTienda();
+    }
+
+    // CARGA DE HISTORIAS
     async function cargarStories() {
-      const { data } = await db.from('historias').select('*').eq('activo', true).order('id', { ascending: false });
-      listaHistorias = data || [];
+      try {
+        const { data } = await db.from('historias').select('*').eq('activo', true).order('id', { ascending: false });
+        listaHistorias = data || [];
+      } catch (err) {
+        listaHistorias = [];
+      }
+
       const cont = document.getElementById('storiesContainer');
-      
       let html = `
         <div class="story-unit" onclick="window.location.href='admin.html'">
           <div class="story-avatar-wrap">
-            <img src="logo.png" alt="Admin">
+            <img src="logo.png" alt="Crear">
             <div class="story-add-badge">+</div>
           </div>
           <span class="story-name">Crear</span>
@@ -564,7 +1438,7 @@
       `;
 
       html += listaHistorias.map((s, idx) => `
-        <div class="story-unit" onclick="verStoryModal(${idx})">
+        <div class="story-unit" onclick="abrirStoryComoPopup(${idx})">
           <div class="story-avatar-wrap ${idx === 0 ? 'highlight' : ''}">
             <img src="${s.imagen}" alt="${s.titulo}">
           </div>
@@ -575,180 +1449,562 @@
       cont.innerHTML = html;
     }
 
-    function verStoryModal(idx) {
-      const s = listaHistorias[idx];
-      if (!s) return;
-      document.getElementById('popupImg').src = s.imagen;
-      document.getElementById('popupTitle').innerText = s.titulo;
-      document.getElementById('staticPopupModal').classList.add('open');
-    }
-
-    function cerrarModalPopup() {
-      document.getElementById('staticPopupModal').classList.remove('open');
-    }
-
-    function verificarPopup() {
-      const pStory = listaHistorias.find(s => s.es_popup);
-      if (pStory) {
-        document.getElementById('popupImg').src = pStory.imagen;
-        document.getElementById('popupTitle').innerText = pStory.titulo;
-        document.getElementById('staticPopupModal').classList.add('open');
-        return;
-      }
-      const pProd = listaProductos.find(p => p.es_popup);
-      if (pProd) {
-        abrirDrawerProd(pProd.id);
-      }
-    }
-
+    // CARGA DE CATEGORÍAS
     async function cargarCategorias() {
-      const { data } = await db.from('categorias').select('*').order('id', { ascending: true });
-      const cats = data && data.length > 0 ? data : [
-        { id: 1, nombre: 'calzado', icono: '👟' },
-        { id: 2, nombre: 'ropa', icono: '👕' }
-      ];
+      try {
+        const { data } = await db.from('categorias').select('*').order('id', { ascending: true });
+        listaCategorias = (data && data.length > 0) ? data : [
+          { id: 1, nombre: 'calzado', icono: '👟' },
+          { id: 2, nombre: 'ropa', icono: '👕' },
+          { id: 3, nombre: 'anteojos', icono: '🕶️' },
+          { id: 4, nombre: 'otras', icono: '🎒' }
+        ];
+      } catch (err) {
+        listaCategorias = [
+          { id: 1, nombre: 'calzado', icono: '👟' },
+          { id: 2, nombre: 'ropa', icono: '👕' }
+        ];
+      }
 
       const cont = document.getElementById('categoriesContainer');
-      cont.innerHTML = cats.map(c => `
-        <div class="category-box" onclick="filtrarCat('${c.nombre}')">
+      cont.innerHTML = listaCategorias.map(c => `
+        <div class="category-box" onclick="abrirTiendaConFiltro('${c.nombre}')">
           <span class="emoji">${c.icono || '🏷️'}</span>
           <span class="category-title">${c.nombre}</span>
         </div>
       `).join('');
+
+      renderPillsTienda();
     }
 
+    function renderPillsTienda() {
+      const pillsCont = document.getElementById('shopPillsContainer');
+      if (!pillsCont) return;
+
+      let pills = `<div class="shop-pill ${categoriaActivaTienda==='todos'?'active':''}" onclick="setFiltroPill('todos')">Todos</div>`;
+      pills += `<div class="shop-pill ${categoriaActivaTienda==='ofertas'?'active':''}" onclick="setFiltroPill('ofertas')">🔥 Ofertas</div>`;
+      
+      listaCategorias.forEach(c => {
+        pills += `<div class="shop-pill ${categoriaActivaTienda===c.nombre.toLowerCase()?'active':''}" onclick="setFiltroPill('${c.nombre.toLowerCase()}')">${c.icono||''} ${c.nombre}</div>`;
+      });
+
+      pillsCont.innerHTML = pills;
+    }
+
+    function setFiltroPill(cat) {
+      categoriaActivaTienda = cat;
+      renderPillsTienda();
+      filtrarTienda();
+    }
+
+    // CARGA DE PRODUCTOS
     async function cargarProductos() {
-      const { data } = await db.from('productos').select('*').order('id', { ascending: false });
-      listaProductos = data || [];
-      renderBannerHero(listaProductos);
-      renderGrid(listaProductos);
+      try {
+        const { data } = await db.from('productos').select('*').order('id', { ascending: false });
+        listaProductos = data || [];
+      } catch (err) {
+        listaProductos = [];
+      }
+
+      listaOfertas = listaProductos.filter(p => p.en_oferta);
+      if (listaOfertas.length === 0 && listaProductos.length > 0) {
+        listaOfertas = [listaProductos[0]];
+      }
+
+      renderHeroOfertasSlider(listaOfertas);
+      renderGridRecomendados(listaProductos);
+      filtrarTienda();
     }
 
-    function renderBannerHero(items) {
-      if (items.length === 0) return;
-      const destacado = items.find(p => p.en_oferta) || items[0];
-      prodBannerId = destacado.id;
-      document.getElementById('heroTitle').innerText = destacado.nombre;
-      document.getElementById('heroTag').innerText = destacado.en_oferta ? 'En Oferta' : 'Destacado';
-      const foto = (destacado.imagenes && destacado.imagenes[0]) || destacado.imagen || '';
-      document.getElementById('heroImage').src = foto;
+    // 4. CARRUSEL DE TODAS LAS OFERTAS (SLIDER INTERACTIVO ESTILO FASHORA)
+    function renderHeroOfertasSlider(ofertas) {
+      const track = document.getElementById('heroSlidesTrack');
+      const dots = document.getElementById('heroDotsWrap');
+
+      if (!ofertas || ofertas.length === 0) {
+        track.innerHTML = `
+          <div class="hero-slide" onclick="mostrarVista('shop')">
+            <div class="hero-content">
+              <span class="hero-tag-pill"><i class="fa-solid fa-fire"></i> NUEVA COLECCIÓN</span>
+              <h2 class="hero-title">MOKA MOTION</h2>
+              <div class="hero-btn">Explorar tienda <i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+            <img src="logo.png" class="hero-image-bg" alt="Moka">
+          </div>
+        `;
+        dots.innerHTML = '';
+        return;
+      }
+
+      track.innerHTML = ofertas.map((p, idx) => {
+        const foto = (p.imagenes && p.imagenes[0]) || p.imagen || 'logo.png';
+        const precio = Number(p.precio).toLocaleString('es-AR');
+        return `
+          <div class="hero-slide" onclick="abrirDetalleProducto(${p.id})">
+            <div class="hero-content">
+              <span class="hero-tag-pill"><i class="fa-solid fa-tag"></i> EN OFERTA ESPECIAL</span>
+              <h2 class="hero-title">${p.nombre}</h2>
+              <div class="hero-price-row">
+                <span class="hero-price-val">$${precio}</span>
+              </div>
+              <div class="hero-btn">Ver producto <i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+            <img src="${foto}" class="hero-image-bg" alt="${p.nombre}">
+          </div>
+        `;
+      }).join('');
+
+      dots.innerHTML = ofertas.map((_, i) => `
+        <div class="hero-dot ${i === 0 ? 'active' : ''}" onclick="moverSliderOferta(${i})"></div>
+      `).join('');
+
+      // Rotación automática suave del slider si hay más de 1 oferta
+      if (heroSliderTimer) clearInterval(heroSliderTimer);
+      if (ofertas.length > 1) {
+        heroSliderTimer = setInterval(() => {
+          heroSliderIndex = (heroSliderIndex + 1) % ofertas.length;
+          moverSliderOferta(heroSliderIndex);
+        }, 4500);
+      }
     }
 
-    function clickBannerDestacado() {
-      if (prodBannerId) abrirDrawerProd(prodBannerId);
+    function moverSliderOferta(idx) {
+      heroSliderIndex = idx;
+      const track = document.getElementById('heroSlidesTrack');
+      if (track) track.style.transform = `translateX(-${idx * 100}%)`;
+      
+      const dots = document.querySelectorAll('.hero-dot');
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
     }
 
-    function renderGrid(items) {
+    // 2. RENDER DE PRODUCTOS CON ETIQUETITAS Y SWATCHES DE COLORES EN CADA PUBLICACIÓN
+    function generarSwatchesHTML(colores) {
+      if (!colores || colores.length === 0) return '';
+      
+      const maxSwatches = 3;
+      const visibles = colores.slice(0, maxSwatches);
+      const restantes = colores.length - maxSwatches;
+
+      let html = '<div class="tile-colors-row">';
+      visibles.forEach(c => {
+        const hex = resolverHexColor(c);
+        html += `<span class="tile-color-swatch" style="background-color:${hex};" title="${c}"></span>`;
+      });
+
+      if (restantes > 0) {
+        html += `<span class="tile-color-badge">+${restantes}</span>`;
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderGridRecomendados(items) {
       const grid = document.getElementById('productsGrid');
-      if (items.length === 0) {
-        grid.innerHTML = '<p style="grid-column:span 2; text-align:center; color:var(--text-dim); padding:30px 0; font-size:0.8rem;">No hay prendas cargadas</p>';
+      if (!items || items.length === 0) {
+        grid.innerHTML = '<p style="grid-column:span 2; text-align:center; color:var(--text-dim); padding:30px 0; font-size:0.82rem;">No hay prendas cargadas</p>';
         return;
       }
 
       grid.innerHTML = items.map(p => {
-        const foto = (p.imagenes && p.imagenes[0]) || p.imagen || '';
+        const foto = (p.imagenes && p.imagenes[0]) || p.imagen || 'logo.png';
+        const esFav = favoritos.includes(p.id);
+        const coloresHTML = generarSwatchesHTML(p.colores);
+
         return `
-          <div class="product-tile" onclick="abrirDrawerProd(${p.id})">
+          <div class="product-tile" onclick="abrirDetalleProducto(${p.id})">
             <div class="tile-img-box">
-              <img src="${foto}" alt="${p.nombre}">
+              <img src="${foto}" alt="${p.nombre}" loading="lazy">
               ${p.en_oferta ? '<span class="tag-sale">SALE</span>' : ''}
+              <button class="fav-heart-btn ${esFav ? 'active' : ''}" onclick="toggleFav(event, ${p.id})">
+                <i class="${esFav ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+              </button>
             </div>
             <div class="tile-info">
               <div class="tile-name">${p.nombre}</div>
               <div class="tile-price">$${Number(p.precio).toLocaleString('es-AR')}</div>
+              ${coloresHTML}
             </div>
           </div>
         `;
       }).join('');
     }
 
-    function filtrarCat(cat) {
-      if (cat === 'todos') renderGrid(listaProductos);
-      else renderGrid(listaProductos.filter(p => (p.categoria || '').toLowerCase() === cat.toLowerCase()));
-    }
+    // 3. TIENDA DEDICADA CON BUSCADOR Y FILTROS
+    function filtrarTienda() {
+      const q = (document.getElementById('shopSearchInput')?.value || '').toLowerCase().trim();
+      let resultado = [...listaProductos];
 
-    function abrirDrawerProd(id) {
-      prodActual = listaProductos.find(p => p.id === id);
-      if (!prodActual) return;
-
-      document.getElementById('pDetailName').innerText = prodActual.nombre;
-      document.getElementById('pDetailPrice').innerText = `$${Number(prodActual.precio).toLocaleString('es-AR')}`;
-
-      const talles = prodActual.talles || [];
-      const wrapT = document.getElementById('tallesWrap');
-      if (talles.length > 0) {
-        wrapT.style.display = 'block';
-        talleElegido = talles[0];
-        document.getElementById('pDetailTalles').innerHTML = talles.map((t, i) => `
-          <div class="filter-chip-opt ${i===0?'active':''}" onclick="selTalle('${t}', this)">${t}</div>
-        `).join('');
-      } else {
-        wrapT.style.display = 'none';
-        talleElegido = 'Único';
+      // Filtro de categoría
+      if (categoriaActivaTienda === 'ofertas') {
+        resultado = resultado.filter(p => p.en_oferta);
+      } else if (categoriaActivaTienda !== 'todos') {
+        resultado = resultado.filter(p => (p.categoria || '').toLowerCase() === categoriaActivaTienda);
       }
 
-      const colores = prodActual.colores || [];
-      const wrapC = document.getElementById('coloresWrap');
+      // Filtro de texto buscador
+      if (q) {
+        resultado = resultado.filter(p => {
+          const n = (p.nombre || '').toLowerCase();
+          const c = (p.categoria || '').toLowerCase();
+          const t = (p.talles || []).join(' ').toLowerCase();
+          const col = (p.colores || []).join(' ').toLowerCase();
+          return n.includes(q) || c.includes(q) || t.includes(q) || col.includes(q);
+        });
+      }
+
+      const counter = document.getElementById('shopProductCount');
+      if (counter) counter.innerText = `${resultado.length} prendas`;
+
+      const grid = document.getElementById('shopGrid');
+      if (resultado.length === 0) {
+        grid.innerHTML = '<p style="grid-column:span 2; text-align:center; color:var(--text-dim); padding:40px 0; font-size:0.85rem;">No encontramos prendas con esa búsqueda</p>';
+        return;
+      }
+
+      grid.innerHTML = resultado.map(p => {
+        const foto = (p.imagenes && p.imagenes[0]) || p.imagen || 'logo.png';
+        const esFav = favoritos.includes(p.id);
+        const coloresHTML = generarSwatchesHTML(p.colores);
+
+        return `
+          <div class="product-tile" onclick="abrirDetalleProducto(${p.id})">
+            <div class="tile-img-box">
+              <img src="${foto}" alt="${p.nombre}" loading="lazy">
+              ${p.en_oferta ? '<span class="tag-sale">SALE</span>' : ''}
+              <button class="fav-heart-btn ${esFav ? 'active' : ''}" onclick="toggleFav(event, ${p.id})">
+                <i class="${esFav ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+              </button>
+            </div>
+            <div class="tile-info">
+              <div class="tile-name">${p.nombre}</div>
+              <div class="tile-price">$${Number(p.precio).toLocaleString('es-AR')}</div>
+              ${coloresHTML}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // FAVORITOS
+    function toggleFav(e, id) {
+      if (e) e.stopPropagation();
+      const idx = favoritos.indexOf(id);
+      if (idx > -1) {
+        favoritos.splice(idx, 1);
+        mostrarToast('Eliminado de favoritos');
+      } else {
+        favoritos.push(id);
+        mostrarToast('Guardado en favoritos ❤️');
+      }
+      localStorage.setItem('moka_favs', JSON.stringify(favoritos));
+      renderGridRecomendados(listaProductos);
+      filtrarTienda();
+      actualizarFavModal(id);
+    }
+
+    function toggleFavoritoModal() {
+      if (prodEnDetalle) toggleFav(null, prodEnDetalle.id);
+    }
+
+    function actualizarFavModal(id) {
+      if (!prodEnDetalle || prodEnDetalle.id !== id) return;
+      const btn = document.getElementById('pDetailFavBtn');
+      if (!btn) return;
+      const esFav = favoritos.includes(id);
+      btn.className = `fav-heart-btn ${esFav ? 'active' : ''}`;
+      btn.innerHTML = `<i class="${esFav ? 'fa-solid' : 'fa-regular'} fa-heart"></i>`;
+    }
+
+    // 1. MODAL DETALLE DE PRENDA COMPLETO (SOLUCIÓN: NO MANDA DIRECTO AL CARRITO)
+    function abrirDetalleProducto(id) {
+      prodEnDetalle = listaProductos.find(p => p.id === id);
+      if (!prodEnDetalle) return;
+
+      document.getElementById('pDetailName').innerText = prodEnDetalle.nombre;
+      document.getElementById('pCatTag').innerText = (prodEnDetalle.categoria || 'PRENDA').toUpperCase();
+      document.getElementById('pDetailPrice').innerText = `$${Number(prodEnDetalle.precio).toLocaleString('es-AR')}`;
+
+      // Galería de fotos
+      const fotos = (prodEnDetalle.imagenes && prodEnDetalle.imagenes.length > 0) 
+        ? prodEnDetalle.imagenes 
+        : [prodEnDetalle.imagen || 'logo.png'];
+      
+      fotoSeleccionadaIdx = 0;
+      document.getElementById('pDetailMainImg').src = fotos[0];
+
+      const thumbsCont = document.getElementById('pDetailThumbsRow');
+      if (fotos.length > 1) {
+        thumbsCont.style.display = 'flex';
+        thumbsCont.innerHTML = fotos.map((src, i) => `
+          <img src="${src}" class="detail-thumb ${i===0?'active':''}" onclick="cambiarFotoDetalle('${src}', ${i})" alt="Thumb">
+        `).join('');
+      } else {
+        thumbsCont.style.display = 'none';
+      }
+
+      // Colores interactivos con swatches circulares
+      const colores = prodEnDetalle.colores || [];
+      const coloresWrap = document.getElementById('coloresBlock');
+      const coloresGrid = document.getElementById('pDetailColoresGrid');
+      const colorLabel = document.getElementById('colorNombreElegido');
+
       if (colores.length > 0) {
-        wrapC.style.display = 'block';
-        colorElegido = colores[0];
-        document.getElementById('pDetailColores').innerHTML = colores.map((c, i) => `
-          <div class="filter-chip-opt ${i===0?'active':''}" onclick="selColor('${c}', this)">${c}</div>
-        `).join('');
+        coloresWrap.style.display = 'block';
+        colorSeleccionado = colores[0];
+        colorLabel.innerText = colorSeleccionado;
+
+        coloresGrid.innerHTML = colores.map((c, i) => {
+          const hex = resolverHexColor(c);
+          return `
+            <div class="color-swatch-item ${i===0?'active':''}" onclick="seleccionarColorDetalle('${c}', this)">
+              <span class="color-circle-dot" style="background-color:${hex};"></span>
+              <span class="color-swatch-name">${c}</span>
+            </div>
+          `;
+        }).join('');
       } else {
-        wrapC.style.display = 'none';
-        colorElegido = 'Original';
+        coloresWrap.style.display = 'none';
+        colorSeleccionado = 'Único';
       }
 
-      document.getElementById('productDrawer').classList.add('open');
+      // Talles interactivos
+      const talles = prodEnDetalle.talles || [];
+      const tallesWrap = document.getElementById('tallesBlock');
+      const tallesGrid = document.getElementById('pDetailTallesGrid');
+      const talleLabel = document.getElementById('talleNombreElegido');
+
+      if (talles.length > 0) {
+        tallesWrap.style.display = 'block';
+        talleSeleccionado = talles[0];
+        talleLabel.innerText = talleSeleccionado;
+
+        tallesGrid.innerHTML = talles.map((t, i) => `
+          <div class="talle-pill ${i===0?'active':''}" onclick="seleccionarTalleDetalle('${t}', this)">${t}</div>
+        `).join('');
+      } else {
+        tallesWrap.style.display = 'none';
+        talleSeleccionado = 'Único';
+      }
+
+      actualizarFavModal(prodEnDetalle.id);
+      document.getElementById('productModal').classList.add('open');
     }
 
-    function selTalle(t, el) {
-      talleElegido = t;
-      el.parentNode.querySelectorAll('.filter-chip-opt').forEach(c => c.classList.remove('active'));
+    function cambiarFotoDetalle(src, idx) {
+      fotoSeleccionadaIdx = idx;
+      document.getElementById('pDetailMainImg').src = src;
+      const thumbs = document.querySelectorAll('.detail-thumb');
+      thumbs.forEach((t, i) => t.classList.toggle('active', i === idx));
+    }
+
+    function seleccionarColorDetalle(c, el) {
+      colorSeleccionado = c;
+      document.getElementById('colorNombreElegido').innerText = c;
+      el.parentNode.querySelectorAll('.color-swatch-item').forEach(x => x.classList.remove('active'));
       el.classList.add('active');
     }
 
-    function selColor(c, el) {
-      colorElegido = c;
-      el.parentNode.querySelectorAll('.filter-chip-opt').forEach(x => x.classList.remove('active'));
+    function seleccionarTalleDetalle(t, el) {
+      talleSeleccionado = t;
+      document.getElementById('talleNombreElegido').innerText = t;
+      el.parentNode.querySelectorAll('.talle-pill').forEach(x => x.classList.remove('active'));
       el.classList.add('active');
     }
 
-    function cerrarDrawerProd() {
-      document.getElementById('productDrawer').classList.remove('open');
+    function cerrarDetalleProducto() {
+      document.getElementById('productModal').classList.remove('open');
     }
 
-    function confirmarAlCarrito() {
+    // AGREGAR AL CARRITO CON FEEDBACK VISUAL
+    function agregarAlCarritoDesdeDetalle() {
+      if (!prodEnDetalle) return;
+
       carrito.push({
-        id: prodActual.id,
-        nombre: prodActual.nombre,
-        precio: Number(prodActual.precio),
-        talle: talleElegido,
-        color: colorElegido
+        id: prodEnDetalle.id,
+        nombre: prodEnDetalle.nombre,
+        precio: Number(prodEnDetalle.precio),
+        talle: talleSeleccionado,
+        color: colorSeleccionado,
+        imagen: (prodEnDetalle.imagenes && prodEnDetalle.imagenes[0]) || prodEnDetalle.imagen || 'logo.png'
       });
-      document.getElementById('dockCartCount').innerText = carrito.length;
-      cerrarDrawerProd();
-      abrirDrawerCarrito();
+
+      actualizarBadgesCarrito();
+      mostrarToast(`¡${prodEnDetalle.nombre} agregado!`);
+      cerrarDetalleProducto();
+    }
+
+    function comprarWhatsAppDirecto() {
+      if (!prodEnDetalle) return;
+      const msg = `*MOKA MOTION - Consulta de Compra Directa*\nHola! Quiero comprar:\n• *${prodEnDetalle.nombre}*\n• Talle: ${talleSeleccionado}\n• Color: ${colorSeleccionado}\n• Precio: $${Number(prodEnDetalle.precio).toLocaleString('es-AR')}`;
+      window.open(`https://wa.me/${TELEFONO_WA}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    // 5. POPUPS DESLIZABLES (SWIPEABLE MODAL: VER DE A UNO CON GESTOS O BOTONES)
+    function verificarYPrepararPopups() {
+      listaPopupsActivos = [];
+
+      // Popups de historias
+      listaHistorias.filter(h => h.es_popup).forEach(h => {
+        listaPopupsActivos.push({
+          tipo: 'historia',
+          titulo: h.titulo,
+          imagen: h.imagen,
+          id: h.id
+        });
+      });
+
+      // Popups de productos destacados
+      listaProductos.filter(p => p.es_popup).forEach(p => {
+        listaPopupsActivos.push({
+          tipo: 'producto',
+          titulo: p.nombre,
+          imagen: (p.imagenes && p.imagenes[0]) || p.imagen,
+          id: p.id,
+          prod: p
+        });
+      });
+
+      // Si hay popups automáticos guardados y no vistos en sesión
+      if (listaPopupsActivos.length > 0 && !sessionStorage.getItem('moka_popups_vistos')) {
+        popupActualIdx = 0;
+        abrirModalPopups();
+        sessionStorage.setItem('moka_popups_vistos', 'true');
+      }
+    }
+
+    function abrirStoryComoPopup(idx) {
+      const s = listaHistorias[idx];
+      if (!s) return;
+      listaPopupsActivos = [{
+        tipo: 'historia',
+        titulo: s.titulo,
+        imagen: s.imagen,
+        id: s.id
+      }];
+      popupActualIdx = 0;
+      abrirModalPopups();
+    }
+
+    function abrirModalPopups() {
+      if (listaPopupsActivos.length === 0) return;
+      renderPopupSlideActual();
+      document.getElementById('swipeablePopupModal').classList.add('open');
+    }
+
+    function cerrarModalPopups() {
+      document.getElementById('swipeablePopupModal').classList.remove('open');
+    }
+
+    function renderPopupSlideActual() {
+      const actual = listaPopupsActivos[popupActualIdx];
+      if (!actual) return;
+
+      document.getElementById('swipePopupImg').src = actual.imagen;
+      document.getElementById('swipePopupTitle').innerText = actual.titulo;
+      document.getElementById('popupCounterText').innerText = `${popupActualIdx + 1} de ${listaPopupsActivos.length}`;
+
+      const btnAccion = document.getElementById('popupActionBtn');
+      if (actual.tipo === 'producto') {
+        btnAccion.style.display = 'flex';
+        btnAccion.innerHTML = 'VER PRENDA <i class="fa-solid fa-arrow-right"></i>';
+      } else {
+        btnAccion.style.display = 'flex';
+        btnAccion.innerHTML = 'ENTENDIDO <i class="fa-solid fa-check"></i>';
+      }
+
+      // Barritas superiores estilo Stories
+      const barsCont = document.getElementById('popupProgressBars');
+      barsCont.innerHTML = listaPopupsActivos.map((_, i) => `
+        <div class="popup-bar-item ${i === popupActualIdx ? 'active' : ''}"></div>
+      `).join('');
+    }
+
+    function cambiarPopup(delta) {
+      const total = listaPopupsActivos.length;
+      if (total <= 1) return;
+      popupActualIdx = (popupActualIdx + delta + total) % total;
+      renderPopupSlideActual();
+    }
+
+    function accionPopupActual() {
+      const actual = listaPopupsActivos[popupActualIdx];
+      if (!actual) return cerrarModalPopups();
+
+      if (actual.tipo === 'producto' && actual.id) {
+        cerrarModalPopups();
+        abrirDetalleProducto(actual.id);
+      } else {
+        cerrarModalPopups();
+      }
+    }
+
+    // GESTOS TÁCTILES SWIPE PARA POPUPS Y SLIDER
+    function configurarGestosSwipe() {
+      const card = document.getElementById('popupCardSwipeArea');
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      card.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      card.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchEndX - touchStartX;
+        if (Math.abs(diff) > 40) {
+          if (diff < 0) cambiarPopup(1); // Swipe izquierda -> siguiente
+          else cambiarPopup(-1); // Swipe derecha -> anterior
+        }
+      }, { passive: true });
+
+      // Swipe también en el carrusel de ofertas
+      const heroTrack = document.getElementById('heroSliderWrap');
+      let heroStartX = 0;
+      heroTrack.addEventListener('touchstart', e => {
+        heroStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      heroTrack.addEventListener('touchend', e => {
+        const diff = e.changedTouches[0].screenX - heroStartX;
+        if (Math.abs(diff) > 40 && listaOfertas.length > 1) {
+          if (diff < 0) {
+            heroSliderIndex = (heroSliderIndex + 1) % listaOfertas.length;
+          } else {
+            heroSliderIndex = (heroSliderIndex - 1 + listaOfertas.length) % listaOfertas.length;
+          }
+          moverSliderOferta(heroSliderIndex);
+        }
+      }, { passive: true });
+    }
+
+    // CARRITO Y CHECKOUT
+    function actualizarBadgesCarrito() {
+      const count = carrito.length;
+      document.getElementById('dockCartCount').innerText = count;
+      document.getElementById('headerCartCount').innerText = count;
     }
 
     function abrirDrawerCarrito() {
       const list = document.getElementById('cartItemsContainer');
       let total = 0;
+
       if (carrito.length === 0) {
-        list.innerHTML = '<p style="text-align:center; color:var(--text-dim); font-size:0.8rem; padding:15px 0;">El carrito está vacío</p>';
+        list.innerHTML = '<p style="text-align:center; color:var(--text-dim); font-size:0.85rem; padding:25px 0;">El carrito está vacío</p>';
       } else {
         list.innerHTML = carrito.map((item, idx) => {
           total += item.precio;
           return `
-            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:10px 14px; border-radius:12px;">
-              <div>
-                <div style="font-weight:700; font-size:0.85rem;">${item.nombre}</div>
-                <div style="font-size:0.7rem; color:var(--text-dim);">${item.talle} / ${item.color}</div>
-              </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:10px 14px; border-radius:14px; border:1px solid rgba(255,255,255,0.06);">
               <div style="display:flex; align-items:center; gap:10px;">
-                <span style="font-weight:800; font-size:0.9rem;">$${item.precio.toLocaleString('es-AR')}</span>
-                <button onclick="borrarItem(${idx})" style="background:none; border:none; color:#ef4444; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                <img src="${item.imagen}" style="width:38px; height:38px; border-radius:8px; object-fit:cover;">
+                <div>
+                  <div style="font-weight:800; font-size:0.86rem; color:#fff;">${item.nombre}</div>
+                  <div style="font-size:0.72rem; color:var(--text-dim);">${item.talle} • ${item.color}</div>
+                </div>
+              </div>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-weight:900; font-size:0.92rem; color:#fff;">$${item.precio.toLocaleString('es-AR')}</span>
+                <button onclick="borrarItemCarrito(${idx})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:0.9rem;"><i class="fa-solid fa-trash"></i></button>
               </div>
             </div>
           `;
@@ -759,9 +2015,9 @@
       document.getElementById('cartDrawer').classList.add('open');
     }
 
-    function borrarItem(idx) {
+    function borrarItemCarrito(idx) {
       carrito.splice(idx, 1);
-      document.getElementById('dockCartCount').innerText = carrito.length;
+      actualizarBadgesCarrito();
       abrirDrawerCarrito();
     }
 
@@ -772,18 +2028,30 @@
     function checkoutWA() {
       const nom = document.getElementById('custName').value.trim();
       const dir = document.getElementById('custAddr').value.trim();
-      if (!nom || !dir) return alert('Por favor completá tu nombre y dirección.');
+      if (!nom || !dir) return alert('Por favor completá tu nombre y dirección de entrega.');
       if (carrito.length === 0) return alert('El carrito está vacío.');
 
       let total = 0;
-      let msg = `*MOKA MOTION - PEDIDO*\nCliente: ${nom}\nDestino: ${dir}\n\n`;
+      let msg = `*MOKA MOTION - NUEVO PEDIDO*\n`;
+      msg += `👤 Cliente: ${nom}\n`;
+      msg += `📍 Destino: ${dir}\n\n`;
+      msg += `*Detalle de prendas:*\n`;
+
       carrito.forEach(p => {
-        msg += `• ${p.nombre} [${p.talle} / ${p.color}] - $${p.precio.toLocaleString('es-AR')}\n`;
+        msg += `• ${p.nombre} [Talle: ${p.talle} / Color: ${p.color}] — $${p.precio.toLocaleString('es-AR')}\n`;
         total += p.precio;
       });
-      msg += `\n*TOTAL: $${total.toLocaleString('es-AR')}*`;
+
+      msg += `\n*TOTAL A ABONAR: $${total.toLocaleString('es-AR')}*`;
 
       window.open(`https://wa.me/${TELEFONO_WA}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function mostrarToast(texto) {
+      const t = document.getElementById('toastMessage');
+      document.getElementById('toastText').innerText = texto;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2200);
     }
 
     init();
